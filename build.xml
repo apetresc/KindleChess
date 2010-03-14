@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+
+<project name="KindleChess" basedir="." default="build-unsigned-active-content">
+  <!-- ===================================================================== -->
+  <!-- | BUILD PROPERTIES                                                  | -->
+  <!-- ===================================================================== -->
+  <!-- Load properties specific to this Kindlet. -->
+  <property file="kindlet.properties" />
+
+  <!-- Define local properties -->
+  <property name="dir.kdk"              location="/Users/adrian/Code/KDK" />
+  <property name="dir.keystore"         location="${dir.kdk}/keys" />
+  <property name="dir.src"              location="${basedir}/src" />
+  <property name="dir.build"            location="${basedir}/build" />
+  <property name="dir.lib"              location="${basedir}/lib" />
+  <property name="dir.img"              location="${basedir}/img" />
+  <property name="dir.build.classes"    location="${dir.build}/classes" />
+  <property name="file.output"          location="${dir.build}/${kindlet.title}.azw2" />
+
+  <!-- Load the password for the keystore -->
+  <import file="${dir.keystore}/dev-keys.xml" optional="false"/>
+  <import file="${dir.keystore}/dev-aliases.xml" optional="false"/>
+
+  <property name="pbp-1.1" location="${dir.kdk}/pbp-secop" />
+  <!-- Set the property 'pbp-1.1' to point to the unzipped contents of the PBP download. -->
+  <property name="btclasses.zip" value="${pbp-1.1}/Optimized_nosym/lib/btclasses.zip"/>
+  <property name="basis_security.jar" value="${pbp-1.1}/Optimized_nosym/lib/basis_security.jar"/>
+  <property name="jce.jar" value="${pbp-1.1}/Optimized_nosym/lib/jce.jar"/>
+  <property name="jsse-cdc.jar" value="${pbp-1.1}/Optimized_nosym/lib/jsse-cdc.jar"/>
+
+  <!-- If the user specifies a PBP to use, we check for the existence of jar/zip files from the PBP. -->
+  <available file="${btclasses.zip}" property="btclasses.zip.available"/>
+  <available file="${basis_security.jar}" property="basis_security.jar.available"/>
+  <available file="${jce.jar}" property="jce.jar.available"/>
+  <available file="${jsse-cdc.jar}" property="jsse-cdc.jar.available"/>
+
+  <!-- boot class path for PBP -->
+  <path id="pbp.bootclasspath">
+    <pathelement path="${btclasses.zip}"/>
+    <pathelement path="${basis_security.jar}"/>
+    <pathelement path="${jce.jar}"/>
+    <pathelement path="${jsse-cdc.jar}"/>
+  </path>
+
+  <!-- If pbp-1.1 is specified, check for the existence of the jar/zip files from the PBP -->
+  <target name="pbp-files" if="pbp-1.1">
+    <fail message="Unable to locate btclasses.zip in PBP directory" unless="btclasses.zip.available"/>
+    <fail message="Unable to locate basis_security.jar in PBP directory.  Did you download the version without security support?" unless="basis_security.jar.available"/>
+    <fail message="Unable to locate jce.jar in PBP directory.  Did you download the version without security support?" unless="jce.jar.available"/>
+    <fail message="Unable to locate jsse-cdc.jar in PBP directory.  Did you download the version without security support?" unless="jsse-cdc.jar.available"/>
+  </target>
+
+  <!-- If pbp-1.1 is not specified, issue a nice message -->
+  <target name="check-pbp" unless="pbp-1.1" depends="pbp-files">
+    <echo message="Compiling using the default bootclasspath.  It is advised to compile using the Personal Basis Profile. "/>
+    <echo message="The PBP libraries may be downloaded from http://java.sun.com/javame/downloads/index.jsp
+by selecting 'Personal Basis Profile 1.1 Reference Implementation (JSR 217)'.
+Download the 'Personal Basis Profile Reference Implementation'.  Be sure to select the version with the Foundation Profile Security Optional Package. "/>
+    <echo message="Specify the location of the PBP with the property pbp-1.1.  Eg. ant -Dpbp-1.1=PATH-TO-PBP"/>
+  </target>
+
+  <!-- ===================================================================== -->
+  <!-- | BUILD TARGETS                                                     | -->
+  <!-- ===================================================================== -->
+  <target name="compile" description="Compiles the Java source files" depends="check-pbp">
+    <mkdir dir="${dir.build.classes}" />
+  	<mkdir dir="${dir.build.classes}/img" />
+    <!--
+            Compile source files.  
+            Note the target and source attributes are required to generate 
+            bytecode compatible with the Kindle Development Kit (KDK).
+    -->
+    <javac target="1.4" 
+           source="1.4"
+           listfiles="yes" 
+           srcdir="${dir.src}" 
+           destdir="${dir.build.classes}"
+           includeAntRuntime="no"
+           bootclasspathref="pbp.bootclasspath"
+           debug="true">
+
+      <classpath>
+        <!-- Include the Kindle Development Kit (KDK) APIs on the classpath -->
+        <fileset dir="${dir.kdk}/lib">
+          <include name="**/*.jar" />
+        </fileset>
+      	
+      	<!-- Include third-party libraries -->
+      	<fileset dir="${dir.lib}">
+      	  <include name="**/*.jar" />	
+      	</fileset>
+      </classpath>
+      <include name="**/*.java" />
+    </javac>
+    <!--
+            Copy any non-source files, these may include images, property files, etc. 
+    -->
+    <copy todir="${dir.build.classes}">
+      <fileset dir="${dir.src}">
+        <include name="**/*" />
+        <exclude name="**/*.java" />
+      </fileset>
+    </copy>
+  	
+	<copy todir="${dir.build.classes}/img">
+  	  <fileset dir="${dir.img}">
+		<include name="**/*.png" />
+	  </fileset>
+  	</copy>
+  </target>
+  
+  <target name="build" depends="compile" description="Alias for compile target"/>
+
+  <target name="check-network-support" if="kindlet.networkSupport" description="Check that network support is supported">
+    <condition property="network-support-is-true">
+      <istrue value="${kindlet.networkSupport}"/>
+    </condition>
+  </target>
+
+  <target name="sign-for-network" if="network-support-is-true" depends="check-network-support" description="Adds network support to the Kindle App" >
+    <available file="${file.output}" property="file.available"/>
+    <fail message="Jar file cannot be found (${file.output}). File signing failed." unless="file.available"/>
+    <signjar jar="${file.output}" 
+             alias="${dev.network.alias}" 
+             keystore="${dir.keystore}/${kindlet.keystore}" 
+             storepass="${developer.keystore.storepass}" />
+  </target>
+
+  <!-- Developer apps do not have Implementation-Id defined. -->
+  <target name="jar-for-developer" description="Jars a file for a developer application">
+    <jar basedir="${dir.build.classes}" destfile="${file.output}">
+      <manifest>
+        <attribute name="Main-Class"             value="${kindlet.mainClass}" />
+        <attribute name="Implementation-Vendor"  value="${kindlet.vendor}" />
+        <attribute name="Implementation-Title"   value="${kindlet.title}" />
+        <attribute name="Implementation-Version" value="${kindlet.version}" />
+        <attribute name="Implementation-URL"     value="${kindlet.url}" />
+        <attribute name="Amazon-Cover-Image"     value="${kindlet.image}" />
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="jar-and-sign" description="Packages and signs the Kindle Active Content." depends="jar-for-developer">
+    <!--
+            Sign the jar file to permit running on the device. 
+    -->
+    <available file="${file.output}" property="file.available"/>
+    <fail message="Jar file cannot be found (${file.output}). File signing failed." unless="file.available"/>
+    <signjar jar="${file.output}" 
+             alias="${dev.kindlet.alias}" 
+             keystore="${dir.keystore}/${kindlet.keystore}" 
+             storepass="${developer.keystore.storepass}" />
+    <signjar jar="${file.output}" 
+             alias="${dev.interaction.alias}" 
+             keystore="${dir.keystore}/${kindlet.keystore}" 
+             storepass="${developer.keystore.storepass}" />
+  </target>
+  
+  <!-- Top level targets for building kindle applications. -->
+  <target name="clean" description="Cleans the build directory.">
+    <delete dir="${dir.build}" />
+  </target>
+
+  <target name="build-active-content" depends="build-unsigned-active-content" description="Build an unsigned active content which can be run on the Kindle Simulator" />
+
+  <target name="build-unsigned-active-content" description="Build an unsigned active content file (.azw2)"
+        depends="compile,jar-for-developer">
+    <echo message="WARNING: This Kindle active content will not run on the device, however it will run in the Kindle Simulator. Please run 'ant build-signed-active-content' if you would like to compile your active content to run on the device." />
+  </target>
+
+  <!-- Check that the keystore file is present. -->
+  <target name="check-keystore" description="Check that the keystore file is present.">
+    <available file="${dir.keystore}/${kindlet.keystore}" property="keystore.available"/>
+    <fail message="Unable to locate keystore file. Please ensure that your keystore is located in '${dir.keystore}' and that 'kindlet.keystore' is specified in your Kindlet properties file. Also, please check that 'kindlet.keystore' is set correctly in your kindlet.properties file. " unless="keystore.available"/>
+  </target>
+
+  <target name="build-signed-active-content" description="Build a signed active content file (.azw2)"
+        depends="check-keystore,compile,jar-and-sign,sign-for-network">
+    <echo message="This Kindle Active Content has been built to run on the device." />
+  </target>
+</project>

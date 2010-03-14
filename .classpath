@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/KDK"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/PBP"/>
+	<classpathentry kind="lib" path="lib/pgnparser-jdk6-1.0.4.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

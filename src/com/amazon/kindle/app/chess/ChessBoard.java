@@ -1,5 +1,7 @@
 package com.amazon.kindle.app.chess;
 
+import org.apache.log4j.Logger;
+
 public class ChessBoard {
 
 	private int [][] board;
@@ -22,6 +24,8 @@ public class ChessBoard {
 	public static final int BLACK = 10;
 	
 	public static final int SIZE = 8;
+	
+	private final Logger log = Logger.getLogger(ChessBoard.class);
 	
 	public ChessBoard() {
 		board = new int[SIZE][SIZE];
@@ -53,7 +57,7 @@ public class ChessBoard {
 		int[] coord = new int[2];
 		
 		coord[0] = coordinate.charAt(0) - 'a';
-		coord[1] = Integer.parseInt(coordinate.substring(1,2));
+		coord[1] = Integer.parseInt(coordinate.substring(1,2)) - 1;
 		
 		return coord;
 	}
@@ -78,6 +82,8 @@ public class ChessBoard {
 	public void move(int srcX, int srcY, int dstX, int dstY) {
 		board[dstX][dstY] = board[srcX][srcY];
 		board[srcX][srcY] = BLANK;
+		
+		log.info("Moving (" + srcX + "," + srcY + ") to (" + dstX + "," + dstY + ")");
 	}
 	
 	public int getColor(String coordinate) {

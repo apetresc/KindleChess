@@ -2,6 +2,12 @@ package com.amazon.kindle.app.chess;
 
 import org.apache.log4j.Logger;
 
+/**
+ * A representation of a particular state of a chessboard.
+ * 
+ * @author Adrian Petrescu
+ *
+ */
 public class ChessBoard {
 
 	private int [][] board;
@@ -23,10 +29,12 @@ public class ChessBoard {
 	public static final int WHITE = 0;
 	public static final int BLACK = 10;
 	
+	/** The size of the chess board being represented. */
 	public static final int SIZE = 8;
 	
 	private final Logger log = Logger.getLogger(ChessBoard.class);
 	
+	/** Creates a new ChessBoard with the default size (8x8) */
 	public ChessBoard() {
 		board = new int[SIZE][SIZE];
 	}
@@ -53,7 +61,15 @@ public class ChessBoard {
 		board[4][7] = BLACK_KING;
 	}
 	
-	private int[] convertAlgebraicToCoordinate(String coordinate) {
+	/**
+	 * Converts a square in algebraic coordinates to numeric coordinates. For example,
+	 * the String "b3" would be mapped to the array <code>{1, 2}</code>.
+	 * 
+	 * @param coordinate An algebraic coordinate representing a square on the ChessBoard.
+	 * @return An integer array containing the <code>x</code> and <code>y</code> coordinates
+	 * representing the indices of the specified square.
+	 */
+	protected static int[] convertAlgebraicToCoordinate(String coordinate) {
 		int[] coord = new int[2];
 		
 		coord[0] = coordinate.charAt(0) - 'a';
@@ -62,16 +78,54 @@ public class ChessBoard {
 		return coord;
 	}
 	
+	/**
+	 * Converts a square in numeric coordinates to algebraic coordinates. For example,
+	 * the array <code>{1, 2}</code> would be mapped to the String "b3".
+	 * @param x The <code>x</code>-coordinate of a square on this ChessBoard.
+	 * @param y The <code>y</code>-coordinate of a square on this ChessBoard.
+	 * @return An algebraic coordinate representing the specified square.
+	 */
+	protected static String convertCoordinateToAlgebraic(int x, int y) {
+		x += 'a';
+		char xc = (char) x;
+		String algebraicCoordinate = "" + xc;
+		algebraicCoordinate += (y + 1);
+		
+		return algebraicCoordinate;
+	}
+	
+	/**
+	 * Returns the occupant of the square represented by the given algebraic coordinate.
+	 * @param coordinate The algebraic coordinates of a square on this ChessBoard.
+	 * @return <code>BLANK</code> if no piece occupies this square, or the piece code of the
+	 * occupying piece (for example, <code>WHITE_PAWN</code>).
+	 */
 	public int getSquare(String coordinate) {
 		int[] square = convertAlgebraicToCoordinate(coordinate);
 	
 		return getSquare(square[0],square[1]);
 	}
 	
+	/**
+	 * Returns the occupant of the square represented by the given index coordinate.
+	 * 
+	 * @param srcX The <code>x</code>-coordinate of a square on this ChessBoard.
+	 * @param srcY The <code>y</code>-coordinate of a square on this ChessBoard.
+	 * @return <code>BLANK</code> if no piece occupies this square, or the piece code of the
+	 * occupying piece (for example, <code>WHITE_PAWN</code>).
+	 */
 	public int getSquare(int srcX, int srcY) {
 		return board[srcX][srcY];
 	}
 	
+	/**
+	 * Moves the piece occupying <code>srcCoordinate</code> to the square specified by
+	 * <code>dstCoordinate</code>. <br/> <br/>
+	 * 
+	 * <b>Note:</b> At the moment, there is no legality-checking of moves being performed.
+	 * @param srcCoordinate The starting square of the piece being moved.
+	 * @param dstCoordinate The destination square of the piece being moved.
+	 */
 	public void move(String srcCoordinate, String dstCoordinate) {
 		int[] srcSquare = convertAlgebraicToCoordinate(srcCoordinate);
 		int[] dstSquare = convertAlgebraicToCoordinate(dstCoordinate);
@@ -79,6 +133,16 @@ public class ChessBoard {
 		move(srcSquare[0], srcSquare[1], dstSquare[0], dstSquare[1]);
 	}
 	
+	/**
+	 * Moves the piece occupying <code>(srcX, srcY)</code> to the square specified by
+	 * <code>(dstX, dstY)</code>. <br/> <br/>
+	 * 
+	 * <b>Note:</b> At the moment, there is no legality-checking of moves being performed.
+	 * @param srcX The <code>x</code>-coordinate of the starting square of the piece being moved.
+	 * @param srcY The <code>y</code>-coordinate of the starting square of the piece being moved.
+	 * @param dstX The <code>x</code>-coordinate of the destination square of the piece being moved.
+	 * @param dstY The <code>y</code>-coordinate of the destination square of the piece being moved.
+	 */
 	public void move(int srcX, int srcY, int dstX, int dstY) {
 		board[dstX][dstY] = board[srcX][srcY];
 		board[srcX][srcY] = BLANK;
@@ -86,16 +150,35 @@ public class ChessBoard {
 		log.info("Moving (" + srcX + "," + srcY + ") to (" + dstX + "," + dstY + ")");
 	}
 	
+	/**
+	 * Returns the color of the specified square. Note that ChessBoards conventionally
+	 * have a <code>WHITE</code> square in the bottom-right corner <code>(7,0)</code>.
+	 * @param coordinate The algebraic coordinates of a square on this ChessBoard.
+	 * @return <code>WHITE</code> if the specified square is colored white, <code>BLACK</code>
+	 * if the specified square is colored black.
+	 */
 	public int getColor(String coordinate) {
 		int[] square = convertAlgebraicToCoordinate(coordinate);
 		
 		return getColor(square[0], square[1]);
 	}
 	
+	/**
+	 * Returns the color of the specified square. Note that ChessBoards conventionally
+	 * have a <code>WHITE</code> square in the bottom-right corner <code>(7,0)</code>.
+	 * @param srcX The <code>x</code>-coordinate of a square on this ChessBoard.
+	 * @param srcY The <code>y</code>-coordinate of a square on this ChessBoard.
+	 * @return <code>WHITE</code> if the specified square is colored white, <code>BLACK</code>
+	 * if the specified square is colored black.
+	 */
 	public int getColor(int srcX, int srcY) {
 		return ((srcX + srcY) % 2) == 0 ? BLACK : WHITE;
 	}
 	
+	/**
+	 * Returns a textual representation of this ChessBoard.
+	 * @return A textual representation of this ChessBoard.
+	 */
 	public String toString() {
 		String boardStr = "";
 		for (int y = SIZE - 1; y >= 0; y--) {

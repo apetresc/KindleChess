@@ -27,23 +27,37 @@ import com.amazon.kindle.kindlet.ui.image.ImageUtil;
 
 public class Main extends AbstractKindlet {
 
+	/** The directory containing the piece set images. */
 	private static final String  IMG_DIR  = "/img/";
+	/** The image format of the piece set images. */
 	private static final String  IMG_EXT  = ".png";
+	/** The size of each individual square on the displayed board. */
 	private static final int     SQUARE_SIZE = 100;
+	/** Sets whether a graphical or textual representation of the chess pieces is used. */
 	private static final boolean USE_IMG = false;
+	/** Sets whether to display the coordinates of each square in the top-right corner */
 	private static boolean       SHOW_COORDINATES = true;
 	
+	/** A mapping from piece Strings to Images. */
 	private static Map pieceSetMap;
+	/** A mapping from piece Strings to their corresponding Unicode glyphs. */
 	private static Map pieceTextMap;
 	
 	private KindletContext context;
+	/** The currently-displayed ChessBoard */
 	private ChessBoard board;
 	private Container root;
+	/** An image of the current position on the ChessBoard */
 	private BufferedImage boardImage;
+	/** The KImage component containing <code>boardImage</code> */
 	private KImage boardComponent;
 		
 	private final Logger log = Logger.getLogger(Main.class);
 	
+	/**
+	 * Initializes the ChessBoard and the UI, and draws them to the screen.
+	 * @param context Provides access to the environment the Kindlet is running in.
+	 */
 	public void create(KindletContext context) {
 		this.context = context;
 		board = new ChessBoard();
@@ -77,6 +91,9 @@ public class Main extends AbstractKindlet {
 		drawBoard();
 	}
 	
+	/**
+	 * Loads the required resources from the application JAR, such as the piece set images.
+	 */
 	private void initResources() {
 		pieceSetMap = new HashMap();
 		pieceTextMap = new HashMap();
@@ -113,6 +130,7 @@ public class Main extends AbstractKindlet {
 		pieceTextMap.put(new Integer(ChessBoard.BLACK_KING),   "\u265A");
 	}
 	
+	/** Draws the current state of the ChessBoard to the <code>boardImage</code> instance. */
 	private void drawBoard() {
 		log.info("Drawing board!\n\n" + board);
 		Graphics2D g = boardImage.createGraphics();
@@ -139,7 +157,7 @@ public class Main extends AbstractKindlet {
 				if (SHOW_COORDINATES ) {
 					g.setColor(backgroundColor);
 					g.setFont(new Font(null, 0, 15));
-					g.drawString(x + "," + y, x * SQUARE_SIZE + 5, (ChessBoard.SIZE - y - 1) * SQUARE_SIZE + 15);
+					g.drawString(ChessBoard.convertCoordinateToAlgebraic(x, y), x * SQUARE_SIZE + 5, (ChessBoard.SIZE - y - 1) * SQUARE_SIZE + 15);
 				}
 				
 				/* Draw the piece on the square */

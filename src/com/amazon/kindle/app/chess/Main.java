@@ -12,16 +12,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
 
 import com.amazon.kindle.kindlet.AbstractKindlet;
 import com.amazon.kindle.kindlet.KindletContext;
@@ -38,6 +32,7 @@ public class Main extends AbstractKindlet {
 	private static final int     SQUARE_SIZE = 100;
 	private static final boolean USE_IMG = false;
 	private static boolean       SHOW_COORDINATES = true;
+	
 	private static Map pieceSetMap;
 	private static Map pieceTextMap;
 	
@@ -64,7 +59,7 @@ public class Main extends AbstractKindlet {
 		button.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
-				board.move("e2", "e4");
+				board.move("e2", "e3");
 				drawBoard();
 				boardComponent.setImage(boardImage);
 				boardComponent.repaint();
@@ -103,19 +98,19 @@ public class Main extends AbstractKindlet {
 		pieceSetMap.put(new Integer(ChessBoard.WHITE),        Toolkit.getDefaultToolkit().createImage(getClass().getResource(IMG_DIR + ChessBoard.WHITE + IMG_EXT)));
 		pieceSetMap.put(new Integer(ChessBoard.BLACK),        Toolkit.getDefaultToolkit().createImage(getClass().getResource(IMG_DIR + ChessBoard.BLACK + IMG_EXT)));
 		
-		pieceTextMap.put(new Integer(ChessBoard.WHITE_PAWN),   "P");
-		pieceTextMap.put(new Integer(ChessBoard.WHITE_ROOK),   "R");
-		pieceTextMap.put(new Integer(ChessBoard.WHITE_KNIGHT), "N");
-		pieceTextMap.put(new Integer(ChessBoard.WHITE_BISHOP), "B");
-		pieceTextMap.put(new Integer(ChessBoard.WHITE_QUEEN),  "Q");
-		pieceTextMap.put(new Integer(ChessBoard.WHITE_KING),   "K");
+		pieceTextMap.put(new Integer(ChessBoard.WHITE_PAWN),   "\u2659");
+		pieceTextMap.put(new Integer(ChessBoard.WHITE_ROOK),   "\u2656");
+		pieceTextMap.put(new Integer(ChessBoard.WHITE_KNIGHT), "\u2658");
+		pieceTextMap.put(new Integer(ChessBoard.WHITE_BISHOP), "\u2657");
+		pieceTextMap.put(new Integer(ChessBoard.WHITE_QUEEN),  "\u2655");
+		pieceTextMap.put(new Integer(ChessBoard.WHITE_KING),   "\u2654");
 
-		pieceTextMap.put(new Integer(ChessBoard.BLACK_PAWN),   "p");
-		pieceTextMap.put(new Integer(ChessBoard.BLACK_ROOK),   "r");
-		pieceTextMap.put(new Integer(ChessBoard.BLACK_KNIGHT), "n");
-		pieceTextMap.put(new Integer(ChessBoard.BLACK_BISHOP), "b");
-		pieceTextMap.put(new Integer(ChessBoard.BLACK_QUEEN),  "q");
-		pieceTextMap.put(new Integer(ChessBoard.BLACK_KING),   "k");
+		pieceTextMap.put(new Integer(ChessBoard.BLACK_PAWN),   "\u265F");
+		pieceTextMap.put(new Integer(ChessBoard.BLACK_ROOK),   "\u265C");
+		pieceTextMap.put(new Integer(ChessBoard.BLACK_KNIGHT), "\u265E");
+		pieceTextMap.put(new Integer(ChessBoard.BLACK_BISHOP), "\u265D");
+		pieceTextMap.put(new Integer(ChessBoard.BLACK_QUEEN),  "\u265B");
+		pieceTextMap.put(new Integer(ChessBoard.BLACK_KING),   "\u265A");
 	}
 	
 	private void drawBoard() {
@@ -158,8 +153,8 @@ public class Main extends AbstractKindlet {
 						});
 					} else {
 						g.setColor(backgroundColor);
-						g.setFont(new Font(null, 0, 30));
-						g.drawString((String) pieceTextMap.get(new Integer(square)), x * SQUARE_SIZE + ((SQUARE_SIZE / 2) - 10 ), (ChessBoard.SIZE - y - 1) * SQUARE_SIZE + (SQUARE_SIZE - 10));
+						g.setFont(new Font(null, 0, 100));
+						g.drawString((String) pieceTextMap.get(new Integer(square)), x * SQUARE_SIZE, (ChessBoard.SIZE - y - 1) * SQUARE_SIZE + (SQUARE_SIZE - 15));
 					}
 				}
 			}

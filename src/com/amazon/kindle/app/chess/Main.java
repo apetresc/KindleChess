@@ -12,7 +12,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -28,7 +32,9 @@ import com.amazon.kindle.kindlet.ui.image.ImageUtil;
 public class Main extends AbstractKindlet {
 
 	/** The directory containing the piece set images. */
-	private static final String  IMG_DIR  = "/img/";
+	private static final String  IMG_DIR = "/img/";
+	/** The directory containing the preloaded pgns */
+	private static final String  PGN_DIR = "/pgn/" ;
 	/** The image format of the piece set images. */
 	private static final String  IMG_EXT  = ".png";
 	/** The size of each individual square on the displayed board. */
@@ -69,15 +75,33 @@ public class Main extends AbstractKindlet {
 		g.setColor(context.getUIResources().getBackgroundColor(KindletUIResources.KColorName.WHITE));
 		g.fillRect(0, 0, ChessBoard.SIZE * SQUARE_SIZE, ChessBoard.SIZE * SQUARE_SIZE);
 		
-		KButton button = new KButton("Refresh");
+		InputStream pgn = getClass().getResourceAsStream(PGN_DIR + "test.pgn");
+		ChessRecord testRecord = new ChessRecord();
+		try {
+			testRecord.parsePGN(pgn);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (PGNParseException pgnpe) {
+			log.info(pgnpe.getMessage());
+		}
+		log.info("Parse successful!");
+		log.info(testRecord);
+		
+		final BoardController bc = new BoardController(board);
+		final List moveList = testRecord.getMoves();
+		final Iterator it = moveList.iterator();
+		
+		KButton button = new KButton("Next Move");
 		button.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent arg0) {
-				board.move("e2", "e3");
-				drawBoard();
-				boardComponent.setImage(boardImage);
-				boardComponent.repaint();
-				log.info("Repainting!!");
+				if (it.hasNext()) {
+					try {
+						bc.applyMove((String) it.next());
+						drawBoard();
+					} catch (IllegalMoveException ime) {
+						log.info(ime.getMessage());
+					}
+				}
 			}
 			
 		});

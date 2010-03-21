@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 public class ChessBoard {
 
 	private int [][] board;
+	private int colorToMove;
 	
 	public static final int BLANK = 0;
 	public static final int WHITE_PAWN = 1;
@@ -28,6 +29,8 @@ public class ChessBoard {
 	
 	public static final int WHITE = 0;
 	public static final int BLACK = 10;
+	
+	public static final int OFF_BOARD = -1;
 	
 	/** The size of the chess board being represented. */
 	public static final int SIZE = 8;
@@ -59,6 +62,17 @@ public class ChessBoard {
 		board[2][7] = board[5][7] = BLACK_BISHOP;
 		board[3][7] = BLACK_QUEEN;
 		board[4][7] = BLACK_KING;
+		
+		colorToMove = WHITE;
+	}
+	
+	public int getColorToMove() {
+		return colorToMove;
+	}
+	
+	public void setColorToMove(int color) {
+		if (color == WHITE || color == BLACK)
+			colorToMove = color;
 	}
 	
 	/**
@@ -115,7 +129,11 @@ public class ChessBoard {
 	 * occupying piece (for example, <code>WHITE_PAWN</code>).
 	 */
 	public int getSquare(int srcX, int srcY) {
-		return board[srcX][srcY];
+		try {
+			return board[srcX][srcY];
+		} catch (ArrayIndexOutOfBoundsException aioobe) {
+			return OFF_BOARD;
+		}
 	}
 	
 	/**
@@ -172,6 +190,9 @@ public class ChessBoard {
 	 * if the specified square is colored black.
 	 */
 	public int getColor(int srcX, int srcY) {
+		if (srcX < 0 || srcY < 0 || srcX >= SIZE || srcY >= SIZE) {
+			return OFF_BOARD;
+		}
 		return ((srcX + srcY) % 2) == 0 ? BLACK : WHITE;
 	}
 	

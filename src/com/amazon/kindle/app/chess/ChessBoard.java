@@ -70,9 +70,13 @@ public class ChessBoard {
 		return colorToMove;
 	}
 	
-	public void setColorToMove(int color) {
-		if (color == WHITE || color == BLACK)
-			colorToMove = color;
+	public void toggleColorToMove() {
+		switch(colorToMove) {
+		case WHITE:
+			colorToMove = BLACK; break;
+		case BLACK:
+			colorToMove = WHITE; break;
+		}
 	}
 	
 	/**

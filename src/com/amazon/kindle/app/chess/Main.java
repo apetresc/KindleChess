@@ -43,11 +43,11 @@ public class Main extends AbstractKindlet {
 	private static final boolean USE_IMG = false;
 	/** Sets whether to display the coordinates of each square in the top-right corner */
 	private static boolean       SHOW_COORDINATES = true;
+	/** Sets whether the coordinates are displayed as algebraic or numeric coordinates */
+	private static boolean		 ALGEBRAIC_COORDINATES = false;
 	
 	/** A mapping from piece Strings to Images. */
 	private static Map pieceSetMap;
-	/** A mapping from piece Strings to their corresponding Unicode glyphs. */
-	private static Map pieceTextMap;
 	
 	private KindletContext context;
 	/** The currently-displayed ChessBoard */
@@ -98,6 +98,8 @@ public class Main extends AbstractKindlet {
 					try {
 						bc.applyMove((String) it.next());
 						drawBoard();
+						boardComponent.setImage(boardImage);
+						boardComponent.repaint();
 					} catch (IllegalMoveException ime) {
 						log.info(ime.getMessage());
 					}
@@ -120,7 +122,6 @@ public class Main extends AbstractKindlet {
 	 */
 	private void initResources() {
 		pieceSetMap = new HashMap();
-		pieceTextMap = new HashMap();
 
 		pieceSetMap.put(new Integer(ChessBoard.WHITE_PAWN),   Toolkit.getDefaultToolkit().createImage(getClass().getResource(IMG_DIR + ChessBoard.WHITE_PAWN + IMG_EXT)));
 		pieceSetMap.put(new Integer(ChessBoard.WHITE_ROOK),   Toolkit.getDefaultToolkit().createImage(getClass().getResource(IMG_DIR + ChessBoard.WHITE_ROOK + IMG_EXT)));
@@ -138,20 +139,6 @@ public class Main extends AbstractKindlet {
 
 		pieceSetMap.put(new Integer(ChessBoard.WHITE),        Toolkit.getDefaultToolkit().createImage(getClass().getResource(IMG_DIR + ChessBoard.WHITE + IMG_EXT)));
 		pieceSetMap.put(new Integer(ChessBoard.BLACK),        Toolkit.getDefaultToolkit().createImage(getClass().getResource(IMG_DIR + ChessBoard.BLACK + IMG_EXT)));
-		
-		pieceTextMap.put(new Integer(ChessBoard.WHITE_PAWN),   "\u2659");
-		pieceTextMap.put(new Integer(ChessBoard.WHITE_ROOK),   "\u2656");
-		pieceTextMap.put(new Integer(ChessBoard.WHITE_KNIGHT), "\u2658");
-		pieceTextMap.put(new Integer(ChessBoard.WHITE_BISHOP), "\u2657");
-		pieceTextMap.put(new Integer(ChessBoard.WHITE_QUEEN),  "\u2655");
-		pieceTextMap.put(new Integer(ChessBoard.WHITE_KING),   "\u2654");
-
-		pieceTextMap.put(new Integer(ChessBoard.BLACK_PAWN),   "\u265F");
-		pieceTextMap.put(new Integer(ChessBoard.BLACK_ROOK),   "\u265C");
-		pieceTextMap.put(new Integer(ChessBoard.BLACK_KNIGHT), "\u265E");
-		pieceTextMap.put(new Integer(ChessBoard.BLACK_BISHOP), "\u265D");
-		pieceTextMap.put(new Integer(ChessBoard.BLACK_QUEEN),  "\u265B");
-		pieceTextMap.put(new Integer(ChessBoard.BLACK_KING),   "\u265A");
 	}
 	
 	/** Draws the current state of the ChessBoard to the <code>boardImage</code> instance. */
@@ -181,7 +168,10 @@ public class Main extends AbstractKindlet {
 				if (SHOW_COORDINATES ) {
 					g.setColor(backgroundColor);
 					g.setFont(new Font(null, 0, 15));
-					g.drawString(ChessBoard.convertCoordinateToAlgebraic(x, y), x * SQUARE_SIZE + 5, (ChessBoard.SIZE - y - 1) * SQUARE_SIZE + 15);
+					if (ALGEBRAIC_COORDINATES)
+						g.drawString(ChessBoard.convertCoordinateToAlgebraic(x, y), x * SQUARE_SIZE + 5, (ChessBoard.SIZE - y - 1) * SQUARE_SIZE + 15);
+					else
+						g.drawString("(" + x + "," + y + ")", x * SQUARE_SIZE + 5, (ChessBoard.SIZE - y - 1) * SQUARE_SIZE + 15);
 				}
 				
 				/* Draw the piece on the square */
@@ -196,7 +186,14 @@ public class Main extends AbstractKindlet {
 					} else {
 						g.setColor(backgroundColor);
 						g.setFont(new Font(null, 0, 100));
-						g.drawString((String) pieceTextMap.get(new Integer(square)), x * SQUARE_SIZE, (ChessBoard.SIZE - y - 1) * SQUARE_SIZE + (SQUARE_SIZE - 15));
+						String piece = "";
+						if (square > ChessBoard.BLACK && board.getColor(x,y) == ChessBoard.BLACK ||
+							square < ChessBoard.BLACK && board.getColor(x,y) == ChessBoard.WHITE) {
+							piece = (String) ChessConstants.pieceTextIconMap.get(new Integer(square > ChessBoard.BLACK ? square - ChessBoard.BLACK : square));
+						} else {
+							piece = (String) ChessConstants.pieceTextIconMap.get(new Integer(square < ChessBoard.BLACK ? square + ChessBoard.BLACK : square));
+						}
+						g.drawString(piece, x * SQUARE_SIZE, (ChessBoard.SIZE - y - 1) * SQUARE_SIZE + (SQUARE_SIZE - 15));
 					}
 				}
 			}

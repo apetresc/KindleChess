@@ -13,7 +13,7 @@ public class ChessBoard {
 	private int [][] board;
 	private int colorToMove;
 	
-	public static final int BLANK = 0;
+	public static final int BLANK = -1;
 	public static final int WHITE_PAWN = 1;
 	public static final int WHITE_ROOK = 2;
 	public static final int WHITE_KNIGHT = 3;
@@ -30,7 +30,7 @@ public class ChessBoard {
 	public static final int WHITE = 0;
 	public static final int BLACK = 10;
 	
-	public static final int OFF_BOARD = -1;
+	public static final int OFF_BOARD = -2;
 	
 	/** The size of the chess board being represented. */
 	public static final int SIZE = 8;
@@ -46,6 +46,11 @@ public class ChessBoard {
 	 * Sets up an initial board position, with A1 at (0,0).
 	 */
 	public void init() {
+		for (int x = 0; x < SIZE; x++) {
+			for (int y = 0; y < SIZE; y++) {
+				board[x][y] = BLANK;
+			}
+		}
 		for (int i = 0; i < SIZE; i++) {
 			board[i][1] = WHITE_PAWN;
 			board[i][6] = BLACK_PAWN;
@@ -179,10 +184,10 @@ public class ChessBoard {
 	 * @return <code>WHITE</code> if the specified square is colored white, <code>BLACK</code>
 	 * if the specified square is colored black.
 	 */
-	public int getColor(String coordinate) {
+	public int getSquareColor(String coordinate) {
 		int[] square = convertAlgebraicToCoordinate(coordinate);
 		
-		return getColor(square[0], square[1]);
+		return getSquareColor(square[0], square[1]);
 	}
 	
 	/**
@@ -193,11 +198,38 @@ public class ChessBoard {
 	 * @return <code>WHITE</code> if the specified square is colored white, <code>BLACK</code>
 	 * if the specified square is colored black.
 	 */
-	public int getColor(int srcX, int srcY) {
+	public int getSquareColor(int srcX, int srcY) {
 		if (srcX < 0 || srcY < 0 || srcX >= SIZE || srcY >= SIZE) {
 			return OFF_BOARD;
 		}
 		return ((srcX + srcY) % 2) == 0 ? BLACK : WHITE;
+	}
+	
+	/**
+	 * Returns the color of the piece on the specified square
+	 * @param coordinate The algebraic coordinates of a square on this ChessBoard.
+	 * @return <code>WHITE</code> if the specified square is being occupied by a white piece,
+	 * <code>BLACK</code> if the specified square is being occupied by a black piece.
+	 */
+	public int getPieceColor(String coordinate) {
+		int[] square = convertAlgebraicToCoordinate(coordinate);
+		
+		return getSquareColor(square[0], square[1]);
+	}
+	
+	/**
+	 * Returns the color of the piece on the specified square.
+	 * @param srcX The <code>x</code>-coordinate of a square on this ChessBoard.
+	 * @param srcY The <code>y</code>-coordinate of a square on this ChessBoard.
+	 * @return <code>WHITE</code> if the specified square is being occupied by a white piece,
+	 * <code>BLACK</code> if the specified square is being occupied by a black piece.
+	 */
+	public int getPieceColor(int srcX, int srcY) {
+		if (srcX < 0 || srcY < 0 || srcX >= SIZE || srcY >= SIZE) {
+			return OFF_BOARD;
+		}
+		
+		return getSquare(srcX, srcY) / 10;
 	}
 	
 	/**

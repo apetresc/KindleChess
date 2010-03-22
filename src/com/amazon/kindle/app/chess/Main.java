@@ -149,7 +149,7 @@ public class Main extends AbstractKindlet {
 			for (int x = 0; x < ChessBoard.SIZE; x++) {
 				int square = board.getSquare(x, y);
 				Color foregroundColor = null, backgroundColor = null;
-				switch (board.getColor(x, y)) {
+				switch (board.getSquareColor(x, y)) {
 				case ChessBoard.BLACK:
 					foregroundColor = context.getUIResources().getBackgroundColor(KColorName.BLACK);
 					backgroundColor = context.getUIResources().getBackgroundColor(KColorName.WHITE);
@@ -187,8 +187,8 @@ public class Main extends AbstractKindlet {
 						g.setColor(backgroundColor);
 						g.setFont(new Font(null, 0, 100));
 						String piece = "";
-						if (square > ChessBoard.BLACK && board.getColor(x,y) == ChessBoard.BLACK ||
-							square < ChessBoard.BLACK && board.getColor(x,y) == ChessBoard.WHITE) {
+						if (square > ChessBoard.BLACK && board.getSquareColor(x,y) == ChessBoard.BLACK ||
+							square < ChessBoard.BLACK && board.getSquareColor(x,y) == ChessBoard.WHITE) {
 							piece = (String) ChessConstants.pieceTextIconMap.get(new Integer(square > ChessBoard.BLACK ? square - ChessBoard.BLACK : square));
 						} else {
 							piece = (String) ChessConstants.pieceTextIconMap.get(new Integer(square < ChessBoard.BLACK ? square + ChessBoard.BLACK : square));

@@ -20,6 +20,13 @@ public class BoardController {
 			} else {
 				moveCoords = pieceSimpleMove(move);
 			}
+			break;
+		case 4:
+			if (move.charAt(1) == 'x') {
+				moveCoords = pieceSimpleCapture(move);
+			} else {
+				moveCoords = pieceAmbiguousMove(move);
+			}
 		}
 		
 		if (moveCoords != null) {
@@ -42,6 +49,29 @@ public class BoardController {
 			break;
 		}
 		return null;
+	}
+
+	private int[][] pieceSimpleMove(String move) throws IllegalMoveException {
+		int piece = ((Integer) ChessConstants.pieceTextMap.get(move.substring(0,1))).intValue();
+		int[] moveCoords = ChessBoard.convertAlgebraicToCoordinate(move.substring(1));
+		if (board.getSquare(moveCoords[0], moveCoords[1]) != ChessBoard.BLANK) {
+			throw new IllegalMoveException(move, "Should be a capture move");
+		}
+		
+		switch(piece) {
+		case ChessBoard.WHITE_ROOK:
+			return rookSimpleMove(move);
+		case ChessBoard.WHITE_KNIGHT:
+			return knightSimpleMove(move);
+		case ChessBoard.WHITE_BISHOP:
+			return bishopSimpleMove(move);
+		case ChessBoard.WHITE_QUEEN:
+			return queenSimpleMove(move);
+		case ChessBoard.WHITE_KING:
+			return kingSimpleMove(move);
+		default:
+			throw new IllegalMoveException(move, "Not a valid piece move!");
+		}
 	}
 
 	private int[][] pawnSimpleMove(String move) throws IllegalMoveException {
@@ -74,29 +104,8 @@ public class BoardController {
 		throw new IllegalMoveException(move, "There's no pawn to move there!");
 	}
 	
-	private int[][] pieceSimpleMove(String move) throws IllegalMoveException {
-		int piece = ((Integer) ChessConstants.pieceTextMap.get(move.substring(0,1))).intValue();
-		switch(piece) {
-		case ChessBoard.WHITE_ROOK:
-			return rookSimpleMove(move);
-		case ChessBoard.WHITE_KNIGHT:
-			return knightSimpleMove(move);
-		case ChessBoard.WHITE_BISHOP:
-			return bishopSimpleMove(move);
-		case ChessBoard.WHITE_QUEEN:
-			return queenSimpleMove(move);
-		case ChessBoard.WHITE_KING:
-			return kingSimpleMove(move);
-		default:
-			throw new IllegalMoveException(move, "Not a valid piece move!");
-		}
-	}
-
 	private int[][] kingSimpleMove(String move) throws IllegalMoveException {
 		int[] moveCoords = ChessBoard.convertAlgebraicToCoordinate(move.substring(1));
-		if (board.getSquare(moveCoords[0], moveCoords[1]) != ChessBoard.BLANK) {
-			throw new IllegalMoveException(move, "Should be a capture move");
-		}
 		int king = ChessBoard.WHITE_KING + board.getColorToMove();
 		
 		for (int dx = -1; dx <= 1; dx++) {
@@ -115,9 +124,6 @@ public class BoardController {
 
 	private int[][] queenSimpleMove(String move) throws IllegalMoveException {
 		int[] moveCoords = ChessBoard.convertAlgebraicToCoordinate(move.substring(1));
-		if (board.getSquare(moveCoords[0], moveCoords[1]) != ChessBoard.BLANK) {
-			throw new IllegalMoveException(move, "Should be a capture move");
-		}
 		int queen = ChessBoard.WHITE_QUEEN + board.getColorToMove();
 		int n;
 		
@@ -172,9 +178,6 @@ public class BoardController {
 
 	private int[][] bishopSimpleMove(String move) throws IllegalMoveException {
 		int[] moveCoords = ChessBoard.convertAlgebraicToCoordinate(move.substring(1));
-		if (board.getSquare(moveCoords[0], moveCoords[1]) != ChessBoard.BLANK) {
-			throw new IllegalMoveException(move, "Should be a capture move");
-		}
 		int bishop = ChessBoard.WHITE_BISHOP + board.getColorToMove();
 		
 		for (int dx = -1; dx <= 1; dx += 2) {
@@ -196,9 +199,6 @@ public class BoardController {
 
 	private int[][] knightSimpleMove(String move) throws IllegalMoveException {
 		int[] moveCoords = ChessBoard.convertAlgebraicToCoordinate(move.substring(1));
-		if (board.getSquare(moveCoords[0], moveCoords[1]) != ChessBoard.BLANK) {
-			throw new IllegalMoveException(move, "Should be a capture move");
-		}
 		int knight = ChessBoard.WHITE_KNIGHT + board.getColorToMove();
 		
 		int[][] targetSquares = new int[][] {
@@ -226,9 +226,6 @@ public class BoardController {
 
 	private int[][] rookSimpleMove(String move) throws IllegalMoveException {
 		int[] moveCoords = ChessBoard.convertAlgebraicToCoordinate(move.substring(1));
-		if (board.getSquare(moveCoords[0], moveCoords[1]) != ChessBoard.BLANK) {
-			throw new IllegalMoveException(move, "Should be a capture move");
-		}
 		int rook = ChessBoard.WHITE_ROOK + board.getColorToMove();
 		int n;
 		
@@ -265,5 +262,54 @@ public class BoardController {
 		}
 		
 		throw new IllegalMoveException(move, "Not a legal rook move");
+	}
+
+	private int[][] pieceSimpleCapture(String move) throws IllegalMoveException {
+		if (move.charAt(0) >= 'a' && move.charAt(0) <= 'h') {
+			return pawnSimpleCapture(move);
+		} else {
+			int[] moveCoords = ChessBoard.convertAlgebraicToCoordinate(move.substring(2));
+			int piece = ((Integer) ChessConstants.pieceTextMap.get(move.substring(0,1))).intValue();
+			if (board.getPieceColor(moveCoords[0], moveCoords[1]) == board.getColorToMove() ||
+				board.getPieceColor(moveCoords[0], moveCoords[1]) == ChessBoard.BLANK) {
+				throw new IllegalMoveException(move, "Not a valid capture");
+			}
+			String simpleMove = "" + move.charAt(0) + move.charAt(2) + move.charAt(3);
+			
+			switch (piece) {
+			case ChessBoard.WHITE_ROOK:
+				return rookSimpleMove(simpleMove);
+			case ChessBoard.WHITE_KNIGHT:
+				return knightSimpleMove(simpleMove);
+			case ChessBoard.WHITE_BISHOP:
+				return bishopSimpleMove(simpleMove);
+			case ChessBoard.WHITE_QUEEN:
+				return queenSimpleMove(simpleMove);
+			case ChessBoard.WHITE_KING:
+				return kingSimpleMove(simpleMove);
+			default:
+				throw new IllegalMoveException(move, "Not a valid capture");
+			}
+		}
+	}
+
+	private int[][] pawnSimpleCapture(String move) throws IllegalMoveException {
+		int[] moveCoords = ChessBoard.convertAlgebraicToCoordinate(move.substring(2));
+		int pawn = ChessBoard.WHITE_PAWN + board.getColorToMove();
+		int[] pawnLocation = ChessBoard.convertAlgebraicToCoordinate("" + move.charAt(0) + (move.charAt(3) + 
+				(board.getColorToMove() == ChessBoard.WHITE ? (+1) : (-1))));
+		if (board.getSquare(pawnLocation[0], pawnLocation[1]) != pawn) {
+			throw new IllegalMoveException(move, "Not a valid pawn capture move -- no pawn on " + pawnLocation);
+		}
+		
+		return new int[][] {
+			new int[] {pawnLocation[0], pawnLocation[1]},
+			new int[] {moveCoords[0], moveCoords[1]}
+		};
+	}
+
+	private int[][] pieceAmbiguousMove(String move) throws IllegalMoveException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

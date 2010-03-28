@@ -9,6 +9,7 @@
 
   <!-- Define local properties -->
   <property name="dir.kdk"              location="/Users/adrian/Code/KDK" />
+  <property name="simulator"            location="${dir.kdk}/bin/KindleSimulator.jar" />
   <property name="dir.keystore"         location="${dir.kdk}/keys" />
   <property name="dir.src"              location="${basedir}/src" />
   <property name="dir.build"            location="${basedir}/build" />
@@ -184,5 +185,23 @@ Download the 'Personal Basis Profile Reference Implementation'.  Be sure to sele
   <target name="build-signed-active-content" description="Build a signed active content file (.azw2)"
         depends="check-keystore,compile,jar-and-sign,sign-for-network">
     <echo message="This Kindle Active Content has been built to run on the device." />
+  </target>
+	
+  <target name="run-simulator" description="Run the unsigned content in the Kindle Simulator">
+    <java jar="${simulator}"
+          fork="true"
+          spawn="true"
+          dir="${dir.build}">
+      <arg line="-f ${file.output} --device KindleDX" />
+    </java>
+  </target>
+  
+  <target name="debug-simulator" description="Debug the unsigned content in the Kindle Simulator">
+    <java jar="${simulator}"
+          fork="true"
+          spawn="true"
+          dir="${dir.build}">
+      <arg line="-f ${file.output} --device KindleDX -d -w -p 8080 -s" />
+    </java>
   </target>
 </project>

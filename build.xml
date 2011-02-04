@@ -8,7 +8,7 @@
   <property file="kindlet.properties" />
 
   <!-- Define local properties -->
-  <property name="dir.kdk"              location="/Users/adrian/Code/KDK" />
+  <!-- <property name="dir.kdk"         location="" /> -->
   <property name="simulator"            location="${dir.kdk}/bin/KindleSimulator.jar" />
   <property name="dir.keystore"         location="${dir.kdk}/keys" />
   <property name="dir.src"              location="${basedir}/src" />

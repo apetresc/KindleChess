@@ -22,7 +22,7 @@ public class ChessRecord {
 	private List moveList;
 	private String result;
 	
-	private final Logger log = Logger.getLogger(Main.class);
+	private final Logger log = Logger.getLogger(ChessRecord.class);
 	
 	public ChessRecord() {
 		tagPairs = new HashMap();
@@ -43,6 +43,7 @@ public class ChessRecord {
 			try {
 				tagPairs.put(inLine.substring(0, inLine.indexOf(" ")), inLine.substring(inLine.indexOf("\"") + 1, inLine.length() -1));
 			} catch (IndexOutOfBoundsException ioobe) {
+			  log.error("Could not parse tag: " + inLine);
 				throw new PGNParseException("Could not parse tag: " + inLine);
 			}
 		}
@@ -56,6 +57,7 @@ public class ChessRecord {
 		int moveNum = 1;
 		while(st.hasMoreTokens()) {
 			if (!st.nextToken().startsWith(moveNum +".")) {
+			  log.error("Could not parse past move " + moveNum);
 				throw new PGNParseException("Could not parse past move " + moveNum);
 			}
 			
@@ -68,7 +70,8 @@ public class ChessRecord {
 				if (validateMove(whiteMove)) {
 					moveList.add(whiteMove);
 				} else {
-					throw new PGNParseException("Could not parse White " + moveNum + ": " + whiteMove +".");
+				  log.error("Could not parse White " + moveNum + ": " + whiteMove + ".");
+					throw new PGNParseException("Could not parse White " + moveNum + ": " + whiteMove + ".");
 				}
 				
 				String blackMove = st.nextToken();
@@ -79,9 +82,11 @@ public class ChessRecord {
 				if (validateMove(blackMove)) {
 					moveList.add(blackMove);
 				} else {
+				  log.error("Could not parse Black " + moveNum + ": " + blackMove + ".");
 					throw new PGNParseException("Could not parse Black " + moveNum + ": " + blackMove + ".");
 				}
 			} catch (NoSuchElementException nsee) {
+			  log.error("Could not parse: Game ended unexpectedly on move " + moveNum);
 				throw new PGNParseException("Could not parse: Game ended unexpectedly on move " + moveNum);
 			}
 			moveNum++;
@@ -101,7 +106,7 @@ public class ChessRecord {
 		else if (move.endsWith("?"))  move = move.substring(0, move.length() - 1);
 		else if (move.endsWith("?!")) move = move.substring(0, move.length() - 2);
 		else if (move.endsWith("!?")) move = move.substring(0, move.length() - 2);
-		if (move.endsWith("#"))  move = move.substring(0, move.length() - 1);
+		if (move.endsWith("#"))       move = move.substring(0, move.length() - 1);
 		else if (move.endsWith("+"))  move = move.substring(0, move.length() - 1);
 		
 		if (move.equals("O-O") || move.equals("O-O-O")) return true;
@@ -129,15 +134,19 @@ public class ChessRecord {
 				char p = move.charAt(0);
 				char l = move.charAt(2);
 				char n = move.charAt(3);
-				if (("RNBQK".indexOf(p) >= 0 || (p >= 'a' && p <= 'h')) && l >= 'a' && l <= 'h' && n >= '1' && n <= '8')
+				if (("RNBQK".indexOf(p) >= 0 || (p >= 'a' && p <= 'h')) &&
+				    (l >= 'a' && l <= 'h' && n >= '1' && n <= '8')) {
 					return true;
+				}
 			} else {
 				char p  = move.charAt(0);
 				char l1 = move.charAt(1);
 				char l2 = move.charAt(2);
 				char n  = move.charAt(3);
-				if ("RNBQK".indexOf(p) >= 0 && l1 >= 'a' && l1 <= 'h' && l2 >= 'a' && l2 <= 'h' && n >= '1' && n <= '8')
+				if ("RNBQK".indexOf(p) >= 0 && l1 >= 'a' && l1 <= 'h' && l2 >= 'a' &&
+				    l2 <= 'h' && n >= '1' && n <= '8') {
 					return true;
+				}
 			}
 		}
 		break;

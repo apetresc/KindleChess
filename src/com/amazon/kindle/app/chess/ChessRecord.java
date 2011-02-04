@@ -22,7 +22,7 @@ public class ChessRecord {
 	private List moveList;
 	private String result;
 	
-	private final Logger log = Logger.getLogger(ChessBoard.class);
+	private final Logger log = Logger.getLogger(Main.class);
 	
 	public ChessRecord() {
 		tagPairs = new HashMap();

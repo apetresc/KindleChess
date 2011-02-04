@@ -2,6 +2,7 @@ package com.amazon.kindle.app.chess;
 
 import org.apache.log4j.Logger;
 
+
 /**
  * A representation of a particular state of a chessboard.
  * 
@@ -35,7 +36,7 @@ public class ChessBoard {
 	/** The size of the chess board being represented. */
 	public static final int SIZE = 8;
 	
-	private final Logger log = Logger.getLogger(ChessBoard.class);
+	private final Logger log = Logger.getLogger(Main.class);
 	
 	/** Creates a new ChessBoard with the default size (8x8) */
 	public ChessBoard() {

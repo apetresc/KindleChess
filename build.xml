@@ -13,7 +13,6 @@
   <property name="dir.keystore"         location="${dir.kdk}/keys" />
   <property name="dir.src"              location="${basedir}/src" />
   <property name="dir.build"            location="${basedir}/build" />
-  <property name="dir.lib"              location="${basedir}/lib" />
   <property name="dir.img"              location="${basedir}/img" />
   <property name="dir.pgn"              location="${basedir}/pgn" />
   <property name="dir.build.classes"    location="${dir.build}/classes" />
@@ -86,11 +85,6 @@ Download the 'Personal Basis Profile Reference Implementation'.  Be sure to sele
         <fileset dir="${dir.kdk}/lib">
           <include name="**/*.jar" />
         </fileset>
-      	
-      	<!-- Include third-party libraries -->
-      	<fileset dir="${dir.lib}">
-      	  <include name="**/*.jar" />	
-      	</fileset>
       </classpath>
       <include name="**/*.java" />
     </javac>

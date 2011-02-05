@@ -53,7 +53,7 @@ public class PGNSource {
 	public PGNSource(InputStream inputStream) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 		String line;
-		StringBuilder buffer = new StringBuilder();
+		StringBuffer buffer = new StringBuffer();
 		
 		while ((line = br.readLine()) != null) {
 			buffer.append(line + "\r\n");

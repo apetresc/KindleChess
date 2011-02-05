@@ -317,22 +317,22 @@ public class PGNMove {
 			this.piece = PGNParser.PAWN;
 		}
 
-		if (move.contains("x")) {
+		if (PGNParseUtils.contains(move, 'x')) {
 			this.captured = true;
-			move = move.replace("x", "");
+			move = PGNParseUtils.removeFirstOccurence(move, 'x');
 		}
 
-		if (move.contains("+")) {
+		if (PGNParseUtils.contains(move, '+')) {
 			this.checked = true;
-			move = move.replace("+", "");
+			move = PGNParseUtils.removeFirstOccurence(move, '+');
 		}
 		
-		if (move.contains("#")) {
+		if (PGNParseUtils.contains(move, '#')) {
 			this.checkMated = true;
-			move = move.replace("#", "");
+			move = PGNParseUtils.removeFirstOccurence(move, '#');
 		}
 
-		if (move.contains("=")) {
+		if (PGNParseUtils.contains(move, '=')) {
 			try {
 				String promotedPiece = move.substring(move.indexOf('=') + 1);
 				

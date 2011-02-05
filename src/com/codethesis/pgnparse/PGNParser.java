@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  *
@@ -72,26 +73,14 @@ public class PGNParser {
 	private static final byte BLACK_QUEEN = 5;
 	
 	private static final byte BLACK_KING = 6;
-	
-	private static String MOVE_TYPE_1_RE = "[a-h][1-8]";
-	
+		
 	private static final int MOVE_TYPE_1_LENGTH = 2;
-	
-	private static String MOVE_TYPE_2_RE = "[" + PAWN + KNIGHT + BISHOP + ROOK + QUEEN + KING + "][a-h][1-8]";
-	
+		
 	private static final int MOVE_TYPE_2_LENGTH = 3;
-	
-	private static String MOVE_TYPE_3_RE = "[" + PAWN + KNIGHT + BISHOP + ROOK + QUEEN + KING + "][a-h][a-h][1-8]";
-	
+		
 	private static final int MOVE_TYPE_3_LENGTH = 4;
-	
-	private static String MOVE_TYPE_4_RE = "[" + PAWN + KNIGHT + BISHOP + ROOK + QUEEN + KING + "][a-h][1-8][a-h][1-8]";
-	
+		
 	private static final int MOVE_TYPE_4_LENGTH = 5;
-	
-	private static String MOVE_TYPE_5_RE = "[a-h][a-h][1-8]";
-	
-	private static String MOVE_TYPE_6_RE = "[" + PAWN + KNIGHT + BISHOP + ROOK + QUEEN + KING + "][1-8][a-h][1-8]";
 	
 	private static final byte[][] KNIGHT_SEARCH_PATH = { { -1, 2 }, { 1, 2 }, { -1, -2 }, { 1, -2 }, { -2, 1 }, { -2, -1 }, { 2, -1 }, { 2, 1 } };
 	
@@ -187,7 +176,7 @@ public class PGNParser {
 		PGNGame game = new PGNGame(pgn);
 		BufferedReader br = new BufferedReader(new StringReader(pgn));
 		String line;
-		StringBuilder buffer = new StringBuilder();
+		StringBuffer buffer = new StringBuffer();
 
 		while ((line = br.readLine()) != null) {
 			line = line.trim();
@@ -202,7 +191,7 @@ public class PGNParser {
 
 				}
 			} else {
-				if (!line.isEmpty()) {
+				if (!PGNParseUtils.isEmpty(line)) {
 					buffer.append(line + " ");
 				}
 			}
@@ -212,20 +201,21 @@ public class PGNParser {
 
 		for (int p = 0; p < pairs.length; p++) {
 		  String pair = pairs[p];
-			if (pair.isEmpty()) {
+			if (PGNParseUtils.isEmpty(pair)) {
 				continue;
 			}
 
 			String[] rawMoves;
 			
-			if (pair.contains("{")) {
-				String[] temp = pair.split("\\s+");
+			if (PGNParseUtils.contains(pair, '{')) {
+			  StringTokenizer st = new StringTokenizer(pair);
+				String[] temp = PGNParseUtils.splitByWhitespace(pair);
 				int i = 0;
 				ArrayList list = new ArrayList();
 
 				while (i < temp.length) {
 					if (temp[i].startsWith("{")) {
-						StringBuilder b = new StringBuilder();
+						StringBuffer b = new StringBuffer();
 						
 						while (i < temp.length) {
 							b.append(temp[i] + " ");
@@ -247,7 +237,7 @@ public class PGNParser {
 				
 				rawMoves = (String[]) list.toArray();
 			} else {
-				rawMoves = pair.split("\\s+");
+				rawMoves = PGNParseUtils.splitByWhitespace(pair);
 			}
 			
 			try {
@@ -306,12 +296,12 @@ public class PGNParser {
 		List pgnGames = new LinkedList();
 		BufferedReader br = new BufferedReader(new StringReader(pgn));
 		String line;
-		StringBuilder buffer = new StringBuilder();
+		StringBuffer buffer = new StringBuffer();
 		
 		while ((line = br.readLine()) != null) {
 			line = line.trim();
 			
-			if (!line.isEmpty()) {
+			if (!PGNParseUtils.isEmpty(line)) {
 				buffer.append(line + "\r\n");
 				
 				if (line.endsWith("1-0") || line.endsWith("0-1") || line.endsWith("1/2-1/2") || line.endsWith("*")) {
@@ -384,17 +374,17 @@ public class PGNParser {
 				
 				break;
 			case MOVE_TYPE_2_LENGTH :
-				if (strippedMove.matches(MOVE_TYPE_2_RE)) {
+				if (PGNParseUtils.matchType2(strippedMove)) {
 					handleMoveType2(move, strippedMove, color, board);
-				} else if (strippedMove.matches(MOVE_TYPE_5_RE)) {
+				} else if (PGNParseUtils.matchType5(strippedMove)) {
 					handleMoveType5(move, strippedMove, color, board);
 				}
 				
 				break;
 			case MOVE_TYPE_3_LENGTH :
-				if (strippedMove.matches(MOVE_TYPE_3_RE)) {
+				if (PGNParseUtils.matchType3(strippedMove)) {
 					handleMoveType3(move, strippedMove, color, board);
-				} else if (strippedMove.matches(MOVE_TYPE_6_RE)) {
+				} else if (PGNParseUtils.matchType6(strippedMove)) {
 					handleMoveType6(move, strippedMove, color, board);
 				}
 				
@@ -1010,13 +1000,13 @@ public class PGNParser {
 		} else if (move.isEndGameMarked()) {
 			return true;
 		} else if (strippedMove.length() == MOVE_TYPE_1_LENGTH) {
-			return strippedMove.matches(MOVE_TYPE_1_RE);
+			return PGNParseUtils.matchType1(strippedMove);
 		} else if (strippedMove.length() == MOVE_TYPE_2_LENGTH) {
-			return strippedMove.matches(MOVE_TYPE_2_RE) || strippedMove.matches(MOVE_TYPE_5_RE);
+			return PGNParseUtils.matchType2(strippedMove) || PGNParseUtils.matchType5(strippedMove);
 		} else if (strippedMove.length() == MOVE_TYPE_3_LENGTH) {
-			return strippedMove.matches(MOVE_TYPE_3_RE) || strippedMove.matches(MOVE_TYPE_6_RE);
+			return PGNParseUtils.matchType3(strippedMove) || PGNParseUtils.matchType6(strippedMove);
 		} else if (strippedMove.length() == MOVE_TYPE_4_LENGTH) {
-			return strippedMove.matches(MOVE_TYPE_4_RE);
+			return PGNParseUtils.matchType4(strippedMove);
 		}
 		
 		return false;

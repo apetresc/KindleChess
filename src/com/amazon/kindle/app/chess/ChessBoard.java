@@ -114,7 +114,7 @@ public class ChessBoard {
    *          The <code>y</code>-coordinate of a square on this ChessBoard.
    * @return An algebraic coordinate representing the specified square.
    */
-  protected static String convertCoordinateToAlgebraic(int x, int y) {
+  public static String convertCoordinateToAlgebraic(int x, int y) {
     x += 'a';
     char xc = (char) x;
     String algebraicCoordinate = "" + xc;

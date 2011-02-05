@@ -1,5 +1,7 @@
 package com.amazon.kindle.app.chess;
 
+import com.amazon.kindle.app.chess.model.pgn.IllegalMoveException;
+
 public class BoardController {
 
 	private ChessBoard board;

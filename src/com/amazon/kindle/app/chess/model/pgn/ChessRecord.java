@@ -1,4 +1,4 @@
-package com.amazon.kindle.app.chess;
+package com.amazon.kindle.app.chess.model.pgn;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
+
 
 public class ChessRecord {
 

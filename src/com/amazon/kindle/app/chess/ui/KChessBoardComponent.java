@@ -1,4 +1,4 @@
-package ui;
+package com.amazon.kindle.app.chess.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;

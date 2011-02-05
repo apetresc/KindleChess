@@ -1,4 +1,4 @@
-package com.amazon.kindle.app.chess;
+package com.amazon.kindle.app.chess.model.pgn;
 
 public class PGNParseException extends Exception {
   private static final long serialVersionUID = 8014989081590526944L;

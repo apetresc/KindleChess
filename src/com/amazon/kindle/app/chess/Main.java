@@ -14,9 +14,12 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.log4j.Logger;
-import ui.KChessBoardComponent;
-import ui.KCommentArea;
 
+import com.amazon.kindle.app.chess.model.pgn.ChessRecord;
+import com.amazon.kindle.app.chess.model.pgn.IllegalMoveException;
+import com.amazon.kindle.app.chess.model.pgn.PGNParseException;
+import com.amazon.kindle.app.chess.ui.KChessBoardComponent;
+import com.amazon.kindle.app.chess.ui.KCommentArea;
 import com.amazon.kindle.kindlet.AbstractKindlet;
 import com.amazon.kindle.kindlet.KindletContext;
 import com.amazon.kindle.kindlet.ui.KButton;
@@ -40,6 +43,7 @@ public class Main extends AbstractKindlet {
   private KLabelMultiline commentComponent;
 
   private ChessBoard board;
+  private BoardController boardController;
   
   static Logger log = Logger.getLogger(Main.class);
 
@@ -119,7 +123,7 @@ public class Main extends AbstractKindlet {
     log.info("Parse successful!");
     log.info(testRecord);
 
-    final BoardController boardController = new BoardController(board);
+    boardController = new BoardController(board);
     final List moveList = testRecord.getMoves();
     final Iterator it = moveList.iterator();
 
@@ -147,4 +151,10 @@ public class Main extends AbstractKindlet {
     root.add(mainPanel);
   }
 
+  public BoardController getBoardController() {
+    return boardController;
+  }
+  public boolean boardHasFocus() {
+    return true;
+  }
 }

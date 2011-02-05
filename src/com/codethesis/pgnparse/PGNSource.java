@@ -63,16 +63,15 @@ public class PGNSource {
 		this.source = buffer.toString();
 	}
 	
-	@Override
 	public String toString() {
 		return source;
 	}
 	
-	public List<PGNGame> listGames() throws PGNParseException, IOException, NullPointerException, MalformedMoveException {
+	public List listGames() throws PGNParseException, IOException, NullPointerException, MalformedMoveException {
 		return PGNParser.parse(source);
 	}
 	
-	public List<PGNGame> listGames(boolean force) throws PGNParseException, IOException, NullPointerException, MalformedMoveException {
+	public List listGames(boolean force) throws PGNParseException, IOException, NullPointerException, MalformedMoveException {
 		return PGNParser.parse(source, force);
 	}
 	

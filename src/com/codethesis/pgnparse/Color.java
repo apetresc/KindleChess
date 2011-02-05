@@ -22,9 +22,9 @@ package com.codethesis.pgnparse;
  * @author Deyan Rizov
  *
  */
-public enum Color {
+public class Color {
 
-	white,
-	black,
+	public static final int WHITE = 0;
+	public static final int BLACK = 1;
 	
 }

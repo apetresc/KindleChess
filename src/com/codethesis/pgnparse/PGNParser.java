@@ -128,42 +128,42 @@ public class PGNParser {
 	 * @throws MalformedMoveException 
 	 * @throws NullPointerException 
 	 */
-	public static List<PGNGame> parse(String pgn) throws PGNParseException, IOException, NullPointerException, MalformedMoveException {
-		List<PGNGame> games = new LinkedList<PGNGame>();
-		List<String> pgnSources = PGNParser.splitPGN(pgn);
+	public static List parse(String pgn) throws PGNParseException, IOException, NullPointerException, MalformedMoveException {
+		List games = new LinkedList();
+		List pgnSources = PGNParser.splitPGN(pgn);
 		
 		if (pgnSources == null || pgnSources.size() == 0) {
 			throw new PGNParseException();
 		}
 		
-		Iterator<String> i = pgnSources.iterator();
+		Iterator i = pgnSources.iterator();
 		
 		while (i.hasNext()) {
-			games.add(parsePGNGame(i.next()));
+			games.add(parsePGNGame((String) i.next()));
 		}
 		
 		return games;
 	}
 	
-	public static List<PGNGame> parse(String pgn, boolean force) throws PGNParseException, IOException, NullPointerException, MalformedMoveException {
-		List<PGNGame> games = new LinkedList<PGNGame>();
-		List<String> pgnSources = PGNParser.splitPGN(pgn);
+	public static List parse(String pgn, boolean force) throws PGNParseException, IOException, NullPointerException, MalformedMoveException {
+		List games = new LinkedList();
+		List pgnSources = PGNParser.splitPGN(pgn);
 		
 		if (pgnSources == null || pgnSources.size() == 0) {
 			throw new PGNParseException();
 		}
 		
-		Iterator<String> i = pgnSources.iterator();
+		Iterator i = pgnSources.iterator();
 		
 		while (i.hasNext()) {
 			if (force) {
 				try {
-					games.add(parsePGNGame(i.next()));
+					games.add(parsePGNGame((String) i.next()));
 				} catch (PGNParseException e) {
 					e.printStackTrace();
 				}
 			} else {
-				games.add(parsePGNGame(i.next()));
+				games.add(parsePGNGame((String) i.next()));
 			}
 			
 		}
@@ -210,7 +210,8 @@ public class PGNParser {
 
 		String[] pairs = buffer.toString().split("\\s*\\d+\\.+\\s*");
 
-		for (String pair : pairs) {
+		for (int p = 0; p < pairs.length; p++) {
+		  String pair = pairs[p];
 			if (pair.isEmpty()) {
 				continue;
 			}
@@ -220,8 +221,8 @@ public class PGNParser {
 			if (pair.contains("{")) {
 				String[] temp = pair.split("\\s+");
 				int i = 0;
-				ArrayList<String> list = new ArrayList<String>();
-				
+				ArrayList list = new ArrayList();
+
 				while (i < temp.length) {
 					if (temp[i].startsWith("{")) {
 						StringBuilder b = new StringBuilder();
@@ -244,7 +245,7 @@ public class PGNParser {
 					i++;
 				}
 				
-				rawMoves = list.toArray(new String[0]);
+				rawMoves = (String[]) list.toArray();
 			} else {
 				rawMoves = pair.split("\\s+");
 			}
@@ -280,9 +281,9 @@ public class PGNParser {
 				if (validateMove(move = new PGNMove(rawMoves[i]))) {
 					
 					if (color[0] == WHITE) {
-						move.setColor(Color.white);
+						move.setColor(Color.WHITE);
 					} else {
-						move.setColor(Color.black);
+						move.setColor(Color.BLACK);
 					}
 					
 					game.addMove(move);
@@ -301,8 +302,8 @@ public class PGNParser {
 	 * @return
 	 * @throws IOException
 	 */
-	private static List<String> splitPGN(String pgn) throws IOException {
-		List<String> pgnGames = new LinkedList<String>();
+	private static List splitPGN(String pgn) throws IOException {
+		List pgnGames = new LinkedList();
 		BufferedReader br = new BufferedReader(new StringReader(pgn));
 		String line;
 		StringBuilder buffer = new StringBuilder();
@@ -336,7 +337,7 @@ public class PGNParser {
 		String strippedMove = move.getMove();
 		byte color;
 		
-		if (move.getColor() == Color.white) {
+		if (move.getColor() == Color.WHITE) {
 			color = WHITE;
 		} else {
 			color = BLACK;
@@ -346,7 +347,7 @@ public class PGNParser {
 			if (move.isKingSideCastle()) {
 				move.setKingSideCastle(true);
 				
-				if (move.getColor() == Color.white) {
+				if (move.getColor() == Color.WHITE) {
 					board[6][0] = board[4][0];
 					board[5][0] = board[7][0];
 					board[4][0] = EMPTY;
@@ -360,7 +361,7 @@ public class PGNParser {
 			} else {
 				move.setQueenSideCastle(true);
 				
-				if (move.getColor() == Color.white) {
+				if (move.getColor() == Color.WHITE) {
 					board[2][0] = board[4][0];
 					board[3][0] = board[0][0];
 					board[4][0] = EMPTY;

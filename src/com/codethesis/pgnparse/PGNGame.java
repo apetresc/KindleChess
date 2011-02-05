@@ -29,15 +29,15 @@ import java.util.Map;
  */
 public class PGNGame {
 
-	private Map<String, String> tags;
+	private Map tags;
 	
-	private List<PGNMove> moves;
+	private List moves;
 	
 	private String pgn;
 	
 	PGNGame() {
-		tags = new HashMap<String, String>();
-		moves = new LinkedList<PGNMove>();
+		tags = new HashMap();
+		moves = new LinkedList();
 	}
 	
 	PGNGame(String pgn) {
@@ -45,7 +45,6 @@ public class PGNGame {
 		this.pgn = pgn;
 	}
 	
-	@Override
 	public String toString() {
 		return pgn == null ? "" : pgn;
 	}
@@ -71,10 +70,10 @@ public class PGNGame {
 	}
 	
 	public String getTag(String key) {
-		return tags.get(key);
+		return (String) tags.get(key);
 	}
 	
-	public Iterator<String> getTagKeysIterator() {
+	public Iterator getTagKeysIterator() {
 		return tags.keySet().iterator();
 	}
 	
@@ -87,10 +86,10 @@ public class PGNGame {
 	}
 	
 	public PGNMove getMove(int index) {
-		return moves.get(index);
+		return (PGNMove) moves.get(index);
 	}
 	
-	public Iterator<PGNMove> getMovesIterator() {
+	public Iterator getMovesIterator() {
 		return moves.iterator();
 	}
 	

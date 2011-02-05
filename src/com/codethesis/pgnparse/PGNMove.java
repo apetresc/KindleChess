@@ -33,7 +33,7 @@ public class PGNMove {
 	
 	private String piece;
 	
-	private Color color;
+	private int color;
 	
 	private String comment;
 
@@ -153,14 +153,14 @@ public class PGNMove {
 	/**
 	 * @return the color
 	 */
-	public Color getColor() {
+	public int getColor() {
 		return color;
 	}
 
 	/**
 	 * @param color the color to set
 	 */
-	void setColor(Color color) {
+	void setColor(int color) {
 		this.color = color;
 	}
 

@@ -1,5 +1,7 @@
 package com.codethesis.pgnparse;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class PGNParseUtils {
@@ -14,7 +16,7 @@ public class PGNParseUtils {
   public static String removeFirstOccurence(String str, char c) {
     int charIndex = str.indexOf(c);
     if (charIndex != -1) {
-      return str.substring(0, c).concat(str.substring(c + 1));
+      return str.substring(0, charIndex).concat(str.substring(charIndex + 1));
     } else {
       return str;
     }
@@ -30,6 +32,34 @@ public class PGNParseUtils {
     return tokens;
   }
 
+  public static String[] splitMoveText(StringBuffer movetext) {
+    while (Character.isWhitespace(movetext.charAt(0))) {
+      movetext.deleteCharAt(0);
+    }
+    List tokens = new LinkedList();
+    String lastToken = "";
+    while (movetext.length() > 0) {
+      while (Character.isDigit(movetext.charAt(0))) {
+        movetext.deleteCharAt(0);
+      }
+      assert (movetext.charAt(0) == '.');
+      movetext.deleteCharAt(0);
+      while (Character.isWhitespace(movetext.charAt(0))) {
+        movetext.deleteCharAt(0);
+      }
+      int c = 1;
+      while (c < movetext.length()
+              && !(Character.isWhitespace(movetext.charAt(c - 1)) && Character.isDigit(movetext
+                      .charAt(c)))) {
+        c++;
+      }
+      lastToken = movetext.substring(0, c - 1);
+      tokens.add(lastToken);
+      movetext.delete(0, c);
+    }
+    return (String[]) tokens.toArray(new String[0]);
+  }
+
   public static boolean matchType1(String move) {
     char a = move.charAt(0);
     char b = move.charAt(1);
@@ -40,10 +70,10 @@ public class PGNParseUtils {
     char p = move.charAt(0);
     char a = move.charAt(1);
     char b = move.charAt(2);
-    return (p == PGNParser.PAWN.charAt(0)   || p == PGNParser.KNIGHT.charAt(0) || 
-            p == PGNParser.BISHOP.charAt(0) || p == PGNParser.ROOK.charAt(0) ||
-            p == PGNParser.QUEEN.charAt(0)  || p == PGNParser.KING.charAt(0)) &&
-            ((a >= 'a' && a <= 'h') && (b >= '1' && b <= '8'));
+    return (p == PGNParser.PAWN.charAt(0) || p == PGNParser.KNIGHT.charAt(0)
+            || p == PGNParser.BISHOP.charAt(0) || p == PGNParser.ROOK.charAt(0)
+            || p == PGNParser.QUEEN.charAt(0) || p == PGNParser.KING.charAt(0))
+            && ((a >= 'a' && a <= 'h') && (b >= '1' && b <= '8'));
   }
 
   public static boolean matchType3(String move) {
@@ -51,10 +81,10 @@ public class PGNParseUtils {
     char a1 = move.charAt(1);
     char a2 = move.charAt(2);
     char b = move.charAt(3);
-    return (p == PGNParser.PAWN.charAt(0)   || p == PGNParser.KNIGHT.charAt(0) || 
-            p == PGNParser.BISHOP.charAt(0) || p == PGNParser.ROOK.charAt(0) ||
-            p == PGNParser.QUEEN.charAt(0)  || p == PGNParser.KING.charAt(0)) &&
-            ((a1 >= 'a' && a1 <= 'h') && (a2 >= 'a' && a2 <= 'h') && (b >= '1' && b <= '8'));
+    return (p == PGNParser.PAWN.charAt(0) || p == PGNParser.KNIGHT.charAt(0)
+            || p == PGNParser.BISHOP.charAt(0) || p == PGNParser.ROOK.charAt(0)
+            || p == PGNParser.QUEEN.charAt(0) || p == PGNParser.KING.charAt(0))
+            && ((a1 >= 'a' && a1 <= 'h') && (a2 >= 'a' && a2 <= 'h') && (b >= '1' && b <= '8'));
   }
 
   public static boolean matchType4(String move) {
@@ -63,11 +93,10 @@ public class PGNParseUtils {
     char b1 = move.charAt(2);
     char a2 = move.charAt(3);
     char b2 = move.charAt(4);
-    return (p == PGNParser.PAWN.charAt(0)   || p == PGNParser.KNIGHT.charAt(0) || 
-            p == PGNParser.BISHOP.charAt(0) || p == PGNParser.ROOK.charAt(0) ||
-            p == PGNParser.QUEEN.charAt(0)  || p == PGNParser.KING.charAt(0)) &&
-            ((a1 >= 'a' && a1 <= 'h') && (a2 >= 'a' && a2 <= 'h') &&
-             (b1 >= '1' && b1 <= '8') && (b2 >= '1' && b2 <= '8'));
+    return (p == PGNParser.PAWN.charAt(0) || p == PGNParser.KNIGHT.charAt(0)
+            || p == PGNParser.BISHOP.charAt(0) || p == PGNParser.ROOK.charAt(0)
+            || p == PGNParser.QUEEN.charAt(0) || p == PGNParser.KING.charAt(0))
+            && ((a1 >= 'a' && a1 <= 'h') && (a2 >= 'a' && a2 <= 'h') && (b1 >= '1' && b1 <= '8') && (b2 >= '1' && b2 <= '8'));
   }
 
   public static boolean matchType5(String move) {
@@ -82,9 +111,9 @@ public class PGNParseUtils {
     char b1 = move.charAt(1);
     char a = move.charAt(2);
     char b2 = move.charAt(3);
-    return (p == PGNParser.PAWN.charAt(0)   || p == PGNParser.KNIGHT.charAt(0) || 
-            p == PGNParser.BISHOP.charAt(0) || p == PGNParser.ROOK.charAt(0) ||
-            p == PGNParser.QUEEN.charAt(0)  || p == PGNParser.KING.charAt(0)) &&
-            ((a >= 'a' && a <= 'h') && (b1 >= '1' && b1 <= '8') && (b2 >= '1' && b2 <= '8'));
+    return (p == PGNParser.PAWN.charAt(0) || p == PGNParser.KNIGHT.charAt(0)
+            || p == PGNParser.BISHOP.charAt(0) || p == PGNParser.ROOK.charAt(0)
+            || p == PGNParser.QUEEN.charAt(0) || p == PGNParser.KING.charAt(0))
+            && ((a >= 'a' && a <= 'h') && (b1 >= '1' && b1 <= '8') && (b2 >= '1' && b2 <= '8'));
   }
 }

@@ -23,349 +23,354 @@ package com.codethesis.pgnparse;
  */
 public class PGNMove {
 
-	private String move;
+  private String move;
 
-	private String fullMove;
-	
-	private String fromSquare;
-	
-	private String toSquare;
-	
-	private String piece;
-	
-	private int color;
-	
-	private String comment;
+  private String fullMove;
 
-	private boolean checked;
-	
-	private boolean checkMated;
+  private String fromSquare;
 
-	private boolean captured;
+  private String toSquare;
 
-	private boolean promoted;
+  private String piece;
 
-	private String promotion;
+  private int color;
 
-	private boolean endGameMarked;
+  private String comment;
 
-	private String endGameMark;
-	
-	private boolean kingSideCastle;
-	
-	private boolean queenSideCastle;
-	
-	private boolean enpassant;
-	
-	private boolean enpassantCapture;
-	
-	private String enpassantPieceSquare;
-	
-	/**
-	 * @param fullMove
-	 */
-	PGNMove(String fullMove) throws MalformedMoveException {
-		this(fullMove, "");
-	}
-	
-	/**
-	 * @param fullMove
-	 * @param comment
-	 * @throws MalformedMoveException 
-	 */
-	PGNMove(String fullMove, String comment) throws MalformedMoveException {
-		super();
-		this.fullMove = fullMove;
-		this.comment = comment;
-		parse();
-	}
-	
-	/**
-	 * @return the comment
-	 */
-	public String getComment() {
-		return comment;
-	}
+  private boolean checked;
 
-	/**
-	 * @param comment the comment to set
-	 */
-	void setComment(String comment) {
-		this.comment = comment;
-	}
+  private boolean checkMated;
 
-	/**
-	 * @return the move
-	 */
-	public String getMove() {
-		return move;
-	}
+  private boolean captured;
 
-	/**
-	 * @return the fullMove
-	 */
-	public String getFullMove() {
-		return fullMove;
-	}
+  private boolean promoted;
 
-	/**
-	 * @return the fromSquare
-	 */
-	public String getFromSquare() {
-		return fromSquare;
-	}
+  private String promotion;
 
-	/**
-	 * @param fromSquare the fromSquare to set
-	 */
-	void setFromSquare(String fromSquare) {
-		this.fromSquare = fromSquare;
-	}
+  private boolean endGameMarked;
 
-	/**
-	 * @return the toSquare
-	 */
-	public String getToSquare() {
-		return toSquare;
-	}
+  private String endGameMark;
 
-	/**
-	 * @param toSquare the toSquare to set
-	 */
-	void setToSquare(String toSquare) {
-		this.toSquare = toSquare;
-	}
+  private boolean kingSideCastle;
 
-	/**
-	 * @return the piece
-	 */
-	public String getPiece() {
-		return piece;
-	}
+  private boolean queenSideCastle;
 
-	/**
-	 * @param piece the piece to set
-	 */
-	void setPiece(String piece) {
-		this.piece = piece;
-	}
+  private boolean enpassant;
 
-	/**
-	 * @return the color
-	 */
-	public int getColor() {
-		return color;
-	}
+  private boolean enpassantCapture;
 
-	/**
-	 * @param color the color to set
-	 */
-	void setColor(int color) {
-		this.color = color;
-	}
+  private String enpassantPieceSquare;
 
-	/**
-	 * @return the checked
-	 */
-	public boolean isChecked() {
-		return checked;
-	}
+  /**
+   * @param fullMove
+   */
+  PGNMove(String fullMove) throws MalformedMoveException {
+    this(fullMove, "");
+  }
 
-	/**
-	 * @return the captured
-	 */
-	public boolean isCaptured() {
-		return captured;
-	}
+  /**
+   * @param fullMove
+   * @param comment
+   * @throws MalformedMoveException
+   */
+  PGNMove(String fullMove, String comment) throws MalformedMoveException {
+    super();
+    this.fullMove = fullMove;
+    this.comment = comment;
+    parse();
+  }
 
-	/**
-	 * @return the promoted
-	 */
-	public boolean isPromoted() {
-		return promoted;
-	}
+  /**
+   * @return the comment
+   */
+  public String getComment() {
+    return comment;
+  }
 
-	/**
-	 * @return the promotion
-	 */
-	public String getPromotion() {
-		return promotion;
-	}
+  /**
+   * @param comment
+   *          the comment to set
+   */
+  void setComment(String comment) {
+    this.comment = comment;
+  }
 
-	/**
-	 * @return the endGameMarked
-	 */
-	public boolean isEndGameMarked() {
-		return endGameMarked;
-	}
+  /**
+   * @return the move
+   */
+  public String getMove() {
+    return move;
+  }
 
-	/**
-	 * @return the endGameMark
-	 */
-	public String getEndGameMark() {
-		return endGameMark;
-	}
+  /**
+   * @return the fullMove
+   */
+  public String getFullMove() {
+    return fullMove;
+  }
 
-	/**
-	 * @return the checkMated
-	 */
-	public boolean isCheckMated() {
-		return checkMated;
-	}
+  /**
+   * @return the fromSquare
+   */
+  public String getFromSquare() {
+    return fromSquare;
+  }
 
-	/**
-	 * @return the kingSideCastle
-	 */
-	public boolean isKingSideCastle() {
-		return kingSideCastle;
-	}
+  /**
+   * @param fromSquare
+   *          the fromSquare to set
+   */
+  void setFromSquare(String fromSquare) {
+    this.fromSquare = fromSquare;
+  }
 
-	/**
-	 * @param kingSideCastle the kingSideCastle to set
-	 */
-	void setKingSideCastle(boolean kingSideCastle) {
-		this.kingSideCastle = kingSideCastle;
-	}
+  /**
+   * @return the toSquare
+   */
+  public String getToSquare() {
+    return toSquare;
+  }
 
-	/**
-	 * @return the queenSideCastle
-	 */
-	public boolean isQueenSideCastle() {
-		return queenSideCastle;
-	}
+  /**
+   * @param toSquare
+   *          the toSquare to set
+   */
+  void setToSquare(String toSquare) {
+    this.toSquare = toSquare;
+  }
 
-	/**
-	 * @param queenSideCastle the queenSideCastle to set
-	 */
-	void setQueenSideCastle(boolean queenSideCastle) {
-		this.queenSideCastle = queenSideCastle;
-	}
-	
-	/**
-	 * @return
-	 */
-	public boolean isCastle() {
-		return kingSideCastle || queenSideCastle;
-	}
+  /**
+   * @return the piece
+   */
+  public String getPiece() {
+    return piece;
+  }
 
-	/**
-	 * @return the enpassant
-	 */
-	public boolean isEnpassant() {
-		return enpassant;
-	}
+  /**
+   * @param piece
+   *          the piece to set
+   */
+  void setPiece(String piece) {
+    this.piece = piece;
+  }
 
-	/**
-	 * @param enpassant the enpassant to set
-	 */
-	void setEnpassant(boolean enpassant) {
-		this.enpassant = enpassant;
-	}
+  /**
+   * @return the color
+   */
+  public int getColor() {
+    return color;
+  }
 
-	/**
-	 * @return the enpassantCapture
-	 */
-	public boolean isEnpassantCapture() {
-		return enpassantCapture;
-	}
+  /**
+   * @param color
+   *          the color to set
+   */
+  void setColor(int color) {
+    this.color = color;
+  }
 
-	/**
-	 * @param enpassantCapture the enpassantCapture to set
-	 */
-	void setEnpassantCapture(boolean enpassantCapture) {
-		this.enpassantCapture = enpassantCapture;
-	}
+  /**
+   * @return the checked
+   */
+  public boolean isChecked() {
+    return checked;
+  }
 
-	/**
-	 * @return the enpassantPieceSquare
-	 */
-	public String getEnpassantPieceSquare() {
-		return enpassantPieceSquare;
-	}
+  /**
+   * @return the captured
+   */
+  public boolean isCaptured() {
+    return captured;
+  }
 
-	/**
-	 * @param enpassantPieceSquare the enpassantPieceSquare to set
-	 */
-	void setEnpassantPieceSquare(String enpassantPieceSquare) {
-		this.enpassantPieceSquare = enpassantPieceSquare;
-	}
+  /**
+   * @return the promoted
+   */
+  public boolean isPromoted() {
+    return promoted;
+  }
 
-	/**
-	 * 
-	 * @throws MalformedMoveException
-	 */
-	private void parse() throws MalformedMoveException {
-		if (fullMove == null) {
-			throw new NullPointerException();
-		}
+  /**
+   * @return the promotion
+   */
+  public String getPromotion() {
+    return promotion;
+  }
 
-		String move = fullMove;
-		
-		if (move.startsWith(PGNParser.PAWN)) {
-			this.piece = PGNParser.PAWN;
-		} else if (move.startsWith(PGNParser.KNIGHT)) {
-			this.piece = PGNParser.KNIGHT;
-		} else if (move.startsWith(PGNParser.BISHOP)) {
-			this.piece = PGNParser.BISHOP;
-		} else if (move.startsWith(PGNParser.ROOK)) {
-			this.piece = PGNParser.ROOK;
-		} else if (move.startsWith(PGNParser.QUEEN)) {
-			this.piece = PGNParser.QUEEN;
-		} else if (move.startsWith(PGNParser.KING)) {
-			this.piece = PGNParser.KING;
-		} else {
-			this.piece = PGNParser.PAWN;
-		}
+  /**
+   * @return the endGameMarked
+   */
+  public boolean isEndGameMarked() {
+    return endGameMarked;
+  }
 
-		if (PGNParseUtils.contains(move, 'x')) {
-			this.captured = true;
-			move = PGNParseUtils.removeFirstOccurence(move, 'x');
-		}
+  /**
+   * @return the endGameMark
+   */
+  public String getEndGameMark() {
+    return endGameMark;
+  }
 
-		if (PGNParseUtils.contains(move, '+')) {
-			this.checked = true;
-			move = PGNParseUtils.removeFirstOccurence(move, '+');
-		}
-		
-		if (PGNParseUtils.contains(move, '#')) {
-			this.checkMated = true;
-			move = PGNParseUtils.removeFirstOccurence(move, '#');
-		}
+  /**
+   * @return the checkMated
+   */
+  public boolean isCheckMated() {
+    return checkMated;
+  }
 
-		if (PGNParseUtils.contains(move, '=')) {
-			try {
-				String promotedPiece = move.substring(move.indexOf('=') + 1);
-				
-				if (promotedPiece.equals(PGNParser.PAWN)
-						|| promotedPiece.equals(PGNParser.KNIGHT)
-						|| promotedPiece.equals(PGNParser.BISHOP)
-						|| promotedPiece.equals(PGNParser.ROOK)
-						|| promotedPiece.equals(PGNParser.QUEEN)
-						|| promotedPiece.equals(PGNParser.KING))
-				{
-					move = move.substring(0, move.indexOf('='));
-					this.promoted = true;
-					this.promotion = promotedPiece;
-				}
-				else
-				{
-					throw new MalformedMoveException("Wrong piece abr [" + promotedPiece + "]");
-				}
-			} catch (IndexOutOfBoundsException e) {
-				throw new MalformedMoveException(e);
-			}
-		}
-		
-		if (move.equals("0-0") || move.equals("O-O")) {
-			kingSideCastle = true;
-		} else if (move.equals("0-0-0") || move.equals("O-O-O")) {
-			queenSideCastle = true;
-		} else if (move.equals("1-0") || move.equals("0-1") || move.equals("1/2-1/2") || move.equals("*")) {
-			this.endGameMarked = true;
-			this.endGameMark = move;
-		}
-		
-		this.move = move;
-	}
+  /**
+   * @return the kingSideCastle
+   */
+  public boolean isKingSideCastle() {
+    return kingSideCastle;
+  }
+
+  /**
+   * @param kingSideCastle
+   *          the kingSideCastle to set
+   */
+  void setKingSideCastle(boolean kingSideCastle) {
+    this.kingSideCastle = kingSideCastle;
+  }
+
+  /**
+   * @return the queenSideCastle
+   */
+  public boolean isQueenSideCastle() {
+    return queenSideCastle;
+  }
+
+  /**
+   * @param queenSideCastle
+   *          the queenSideCastle to set
+   */
+  void setQueenSideCastle(boolean queenSideCastle) {
+    this.queenSideCastle = queenSideCastle;
+  }
+
+  /**
+   * @return
+   */
+  public boolean isCastle() {
+    return kingSideCastle || queenSideCastle;
+  }
+
+  /**
+   * @return the enpassant
+   */
+  public boolean isEnpassant() {
+    return enpassant;
+  }
+
+  /**
+   * @param enpassant
+   *          the enpassant to set
+   */
+  void setEnpassant(boolean enpassant) {
+    this.enpassant = enpassant;
+  }
+
+  /**
+   * @return the enpassantCapture
+   */
+  public boolean isEnpassantCapture() {
+    return enpassantCapture;
+  }
+
+  /**
+   * @param enpassantCapture
+   *          the enpassantCapture to set
+   */
+  void setEnpassantCapture(boolean enpassantCapture) {
+    this.enpassantCapture = enpassantCapture;
+  }
+
+  /**
+   * @return the enpassantPieceSquare
+   */
+  public String getEnpassantPieceSquare() {
+    return enpassantPieceSquare;
+  }
+
+  /**
+   * @param enpassantPieceSquare
+   *          the enpassantPieceSquare to set
+   */
+  void setEnpassantPieceSquare(String enpassantPieceSquare) {
+    this.enpassantPieceSquare = enpassantPieceSquare;
+  }
+
+  /**
+   * 
+   * @throws MalformedMoveException
+   */
+  private void parse() throws MalformedMoveException {
+    if (fullMove == null) {
+      throw new NullPointerException();
+    }
+
+    String move = fullMove;
+
+    if (move.startsWith(PGNParser.PAWN)) {
+      this.piece = PGNParser.PAWN;
+    } else if (move.startsWith(PGNParser.KNIGHT)) {
+      this.piece = PGNParser.KNIGHT;
+    } else if (move.startsWith(PGNParser.BISHOP)) {
+      this.piece = PGNParser.BISHOP;
+    } else if (move.startsWith(PGNParser.ROOK)) {
+      this.piece = PGNParser.ROOK;
+    } else if (move.startsWith(PGNParser.QUEEN)) {
+      this.piece = PGNParser.QUEEN;
+    } else if (move.startsWith(PGNParser.KING)) {
+      this.piece = PGNParser.KING;
+    } else {
+      this.piece = PGNParser.PAWN;
+    }
+
+    if (PGNParseUtils.contains(move, 'x')) {
+      this.captured = true;
+      move = PGNParseUtils.removeFirstOccurence(move, 'x');
+    }
+
+    if (PGNParseUtils.contains(move, '+')) {
+      this.checked = true;
+      move = PGNParseUtils.removeFirstOccurence(move, '+');
+    }
+
+    if (PGNParseUtils.contains(move, '#')) {
+      this.checkMated = true;
+      move = PGNParseUtils.removeFirstOccurence(move, '#');
+    }
+
+    if (PGNParseUtils.contains(move, '=')) {
+      try {
+        String promotedPiece = move.substring(move.indexOf('=') + 1);
+
+        if (promotedPiece.equals(PGNParser.PAWN) || promotedPiece.equals(PGNParser.KNIGHT)
+                || promotedPiece.equals(PGNParser.BISHOP) || promotedPiece.equals(PGNParser.ROOK)
+                || promotedPiece.equals(PGNParser.QUEEN) || promotedPiece.equals(PGNParser.KING)) {
+          move = move.substring(0, move.indexOf('='));
+          this.promoted = true;
+          this.promotion = promotedPiece;
+        } else {
+          throw new MalformedMoveException("Wrong piece abr [" + promotedPiece + "]");
+        }
+      } catch (IndexOutOfBoundsException e) {
+        throw new MalformedMoveException(e);
+      }
+    }
+
+    if (move.equals("0-0") || move.equals("O-O")) {
+      kingSideCastle = true;
+    } else if (move.equals("0-0-0") || move.equals("O-O-O")) {
+      queenSideCastle = true;
+    } else if (move.equals("1-0") || move.equals("0-1") || move.equals("1/2-1/2")
+            || move.equals("*")) {
+      this.endGameMarked = true;
+      this.endGameMark = move;
+    }
+
+    this.move = move;
+  }
 
 }

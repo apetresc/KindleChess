@@ -246,7 +246,7 @@ public class PGNParser {
           i++;
         }
 
-        rawMoves = (String[]) list.toArray();
+        rawMoves = (String[]) list.toArray(new String[0]);
       } else {
         rawMoves = PGNParseUtils.splitByWhitespace(pair);
       }

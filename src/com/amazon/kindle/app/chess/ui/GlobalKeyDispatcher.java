@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 
 import com.amazon.kindle.app.chess.Main;
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
+import com.codethesis.pgnparse.PGNMove;
 
 public class GlobalKeyDispatcher implements KeyEventDispatcher {
 
@@ -22,7 +23,13 @@ public class GlobalKeyDispatcher implements KeyEventDispatcher {
     case KindleKeyCodes.VK_FIVE_WAY_RIGHT:
       if (main.getBoardController() != null) {
         event.consume();
+        PGNMove move = main.getBoardController().nextMove();
+        main.getCommentArea().setText(
+                move.getComment() == null ? move.getFullMove() : move.getComment());
+        main.getChessBoardComponent().repaint();
+        main.getCommentArea().repaint();
       }
+      return true;
     }
     return false;
   }

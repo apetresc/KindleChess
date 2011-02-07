@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -12,17 +13,15 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import org.apache.log4j.Logger;
 
+import com.amazon.kindle.app.chess.ui.GlobalKeyDispatcher;
 import com.amazon.kindle.app.chess.ui.KChessBoardComponent;
 import com.amazon.kindle.app.chess.ui.KCommentArea;
 import com.amazon.kindle.kindlet.AbstractKindlet;
 import com.amazon.kindle.kindlet.KindletContext;
-import com.amazon.kindle.kindlet.ui.KButton;
 import com.amazon.kindle.kindlet.ui.KLabel;
-import com.amazon.kindle.kindlet.ui.KLabelMultiline;
 import com.amazon.kindle.kindlet.ui.KPanel;
 import com.amazon.kindle.kindlet.ui.KMenu;
 import com.amazon.kindle.kindlet.ui.KMenuItem;
-import com.codethesis.pgnparse.PGNMove;
 
 public class Main extends AbstractKindlet {
 
@@ -35,7 +34,7 @@ public class Main extends AbstractKindlet {
   private KLabel titleLabel;
   private KLabel descriptionLabel;
   private KChessBoardComponent boardComponent;
-  private KLabelMultiline commentComponent;
+  private KCommentArea commentComponent;
 
   private ChessBoard board;
   private BoardController boardController;
@@ -115,21 +114,8 @@ public class Main extends AbstractKindlet {
       e.printStackTrace();
     }
 
-    KButton button = new KButton("Next Move");
-    button.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent event) {
-          PGNMove move = boardController.nextMove();
-          commentComponent.setText(move.getFullMove());
-          if (move.getComment() != null) {
-            commentComponent.setText(move.getComment());
-          }
-          commentComponent.repaint();
-          boardComponent.repaint();
-      }
-    });
-    gc.gridy = gc.gridy + 1;
-    gc.fill = GridBagConstraints.HORIZONTAL;
-    mainPanel.add(button, gc);
+    KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(
+        new GlobalKeyDispatcher(this));
 
     root.add(mainPanel);
   }
@@ -137,6 +123,15 @@ public class Main extends AbstractKindlet {
   public BoardController getBoardController() {
     return boardController;
   }
+
+  public KCommentArea getCommentArea() {
+    return commentComponent;
+  }
+
+  public KChessBoardComponent getChessBoardComponent() {
+    return boardComponent;
+  }
+
   public boolean boardHasFocus() {
     return true;
   }

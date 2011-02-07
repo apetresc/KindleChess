@@ -10,14 +10,8 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
-import java.util.List;
 import org.apache.log4j.Logger;
 
-import com.amazon.kindle.app.chess.model.pgn.ChessRecord;
-import com.amazon.kindle.app.chess.model.pgn.IllegalMoveException;
-import com.amazon.kindle.app.chess.model.pgn.PGNParseException;
 import com.amazon.kindle.app.chess.ui.KChessBoardComponent;
 import com.amazon.kindle.app.chess.ui.KCommentArea;
 import com.amazon.kindle.kindlet.AbstractKindlet;
@@ -111,37 +105,24 @@ public class Main extends AbstractKindlet {
     menu.add(new BoardResizeMenuItem(25));
     context.setMenu(menu);
 
-    InputStream pgn = getClass().getResourceAsStream(PGN_DIR + "test.pgn");
-    ChessRecord testRecord = new ChessRecord();
-    try {
-      testRecord.parsePGN(pgn);
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (PGNParseException pgnpe) {
-      log.info(pgnpe.getMessage());
-    }
-    log.info("Parse successful!");
-    log.info(testRecord);
-
     boardController = new BoardController(board);
-    final List moveList = testRecord.getMoves();
-    final Iterator it = moveList.iterator();
+    try {
+      boardController.loadPGN(getClass().getResourceAsStream(PGN_DIR + "test.pgn"));
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (com.codethesis.pgnparse.PGNParseException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
     KButton button = new KButton("Next Move");
     button.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent event) {
-        if (it.hasNext()) {
-          try {
-            String move = (String) it.next();
-            log.info("move: " + move);
-            commentComponent.setText(move);
-            commentComponent.repaint();
-            boardController.applyMove(move);
-            boardComponent.repaint();
-          } catch (IllegalMoveException ime) {
-            log.info(ime.getMessage());
-          }
-        }
+          //commentComponent.setText(move);
+          commentComponent.repaint();
+          boardController.nextMove();
+          boardComponent.repaint();
       }
     });
     gc.gridy = gc.gridy + 1;

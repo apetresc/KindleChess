@@ -2,6 +2,9 @@ package com.amazon.kindle.app.chess;
 
 import org.apache.log4j.Logger;
 
+import com.codethesis.pgnparse.Color;
+import com.codethesis.pgnparse.PGNMove;
+
 /**
  * A representation of a particular state of a chessboard.
  * 
@@ -205,6 +208,39 @@ public class ChessBoard {
     log.info("Moving (" + srcX + "," + srcY + ") to (" + dstX + "," + dstY + ")");
   }
 
+  /**
+   * Applies the specified move to the board.
+   *
+   * @param move A legal PGNMove for the current board context.
+   */
+  public void move(PGNMove move) {
+    if (move.isQueenSideCastle()) {
+      switch (move.getColor()) {
+      case Color.WHITE:
+        move("e1", "c1");
+        move("a1", "d1");
+        break;
+      case Color.BLACK:
+        move("e8", "c8");
+        move("a8", "d8");
+        break;
+      }
+    } else if (move.isKingSideCastle()) {
+      switch (move.getColor()) {
+      case Color.WHITE:
+        move("e1", "g1");
+        move("h1", "f1");
+        break;
+      case Color.BLACK:
+        move("e8", "g8");
+        move("h8", "f8");
+        break;
+      }
+    } else {
+      // Just a regular move
+      move(move.getFromSquare(), move.getToSquare());
+    }
+  }
   /**
    * Returns the color of the specified square. Note that ChessBoards
    * conventionally have a <code>WHITE</code> square in the bottom-right corner

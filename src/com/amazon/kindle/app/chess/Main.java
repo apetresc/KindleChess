@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import org.apache.log4j.Logger;
+import org.kwt.ui.KWTProgressBar;
 
 import com.amazon.kindle.app.chess.ui.GlobalKeyDispatcher;
 import com.amazon.kindle.app.chess.ui.KChessBoardComponent;
@@ -35,6 +36,7 @@ public class Main extends AbstractKindlet {
   private KLabel descriptionLabel;
   private KChessBoardComponent boardComponent;
   private KCommentArea commentComponent;
+  private KWTProgressBar progressBar;
 
   private ChessBoard board;
   private BoardController boardController;
@@ -83,6 +85,14 @@ public class Main extends AbstractKindlet {
     gc.insets = new Insets(0, 10, 0, 10);
     mainPanel.add(commentComponent, gc);
 
+    progressBar = new KWTProgressBar();
+    progressBar.setLabelStyle(KWTProgressBar.STYLE_NONE);
+    gc.gridy = 4;
+    gc.insets = new Insets(0, 10, 20, 10);
+    gc.fill = GridBagConstraints.HORIZONTAL;
+    gc.anchor = GridBagConstraints.SOUTH;
+    mainPanel.add(progressBar, gc);
+    
     // menu to allow board resizing for testing
     final KMenu menu = new KMenu();
     class BoardResizeMenuItem extends KMenuItem {
@@ -106,6 +116,7 @@ public class Main extends AbstractKindlet {
     boardController = new BoardController(board);
     try {
       boardController.loadPGN(getClass().getResourceAsStream(PGN_DIR + "test.pgn"));
+      progressBar.setTotalTicks(boardController.getCurrentMainBranchLength());
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -130,6 +141,10 @@ public class Main extends AbstractKindlet {
 
   public KChessBoardComponent getChessBoardComponent() {
     return boardComponent;
+  }
+  
+  public KWTProgressBar getProgressBar() {
+    return progressBar;
   }
 
   public boolean boardHasFocus() {

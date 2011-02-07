@@ -14,6 +14,7 @@
   <property name="dir.src"              location="${basedir}/src" />
   <property name="dir.build"            location="${basedir}/build" />
   <property name="dir.img"              location="${basedir}/img" />
+  <property name="dir.lib"              location="${basedir}/lib" />
   <property name="dir.pgn"              location="${basedir}/pgn" />
   <property name="dir.build.classes"    location="${dir.build}/classes" />
   <property name="file.output"          location="${dir.build}/${kindlet.title}.azw2" />
@@ -66,6 +67,13 @@ Download the 'Personal Basis Profile Reference Implementation'.  Be sure to sele
   <target name="compile" description="Compiles the Java source files" depends="check-pbp">
     <mkdir dir="${dir.build.classes}" />
   	<mkdir dir="${dir.build.classes}/img" />
+
+    <unzip dest="${dir.build.classes}">
+      <fileset dir="${dir.lib}">
+        <include name="**/*.jar" />
+      </fileset>
+    </unzip>
+
     <!--
             Compile source files.  
             Note the target and source attributes are required to generate 
@@ -83,6 +91,9 @@ Download the 'Personal Basis Profile Reference Implementation'.  Be sure to sele
       <classpath>
         <!-- Include the Kindle Development Kit (KDK) APIs on the classpath -->
         <fileset dir="${dir.kdk}/lib">
+          <include name="**/*.jar" />
+        </fileset>
+        <fileset dir="${dir.lib}">
           <include name="**/*.jar" />
         </fileset>
       </classpath>

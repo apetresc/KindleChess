@@ -3,5 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/KDK"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/PBP"/>
+	<classpathentry kind="lib" path="lib/kwt-0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -26,6 +26,9 @@ public class GlobalKeyDispatcher implements KeyEventDispatcher {
         PGNMove move = main.getBoardController().nextMove();
         main.getCommentArea().setText(
                 move.getComment() == null ? move.getFullMove() : move.getComment());
+        main.getProgressBar().incrementTick();
+        
+        main.getProgressBar().repaint();
         main.getChessBoardComponent().repaint();
         main.getCommentArea().repaint();
       }

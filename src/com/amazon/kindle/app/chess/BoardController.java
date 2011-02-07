@@ -45,4 +45,8 @@ public class BoardController {
 	public int getCurrentMoveNumber() {
 	  return currentMoveNumber;
 	}
+
+	public int getCurrentMainBranchLength() {
+	  return pgnGame.getMovesCount();
+	}
 }

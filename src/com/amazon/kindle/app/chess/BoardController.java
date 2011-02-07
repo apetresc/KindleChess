@@ -32,14 +32,14 @@ public class BoardController {
 	  }
 	}
 
-	public boolean nextMove() {
+	public PGNMove nextMove() {
 	  if (pgnIterator == null || !pgnIterator.hasNext()) {
-	    return false;
+	    return null;
 	  }
 	  PGNMove move = (PGNMove) pgnIterator.next();
 	  board.move(move);
 	  currentMoveNumber++;
-	  return true;
+	  return move;
 	}
 
 	public int getCurrentMoveNumber() {

@@ -22,6 +22,7 @@ import com.amazon.kindle.kindlet.ui.KLabelMultiline;
 import com.amazon.kindle.kindlet.ui.KPanel;
 import com.amazon.kindle.kindlet.ui.KMenu;
 import com.amazon.kindle.kindlet.ui.KMenuItem;
+import com.codethesis.pgnparse.PGNMove;
 
 public class Main extends AbstractKindlet {
 
@@ -81,10 +82,8 @@ public class Main extends AbstractKindlet {
     gc.weighty = 1.0;
     gc.fill = GridBagConstraints.BOTH;
     gc.insets = new Insets(0, 10, 0, 10);
-    mainPanel.add(commentComponent);
+    mainPanel.add(commentComponent, gc);
 
-    // commentTextArea intended for pgn comments. Currently just shows the move
-    commentComponent = new KLabelMultiline();
     // menu to allow board resizing for testing
     final KMenu menu = new KMenu();
     class BoardResizeMenuItem extends KMenuItem {
@@ -119,9 +118,12 @@ public class Main extends AbstractKindlet {
     KButton button = new KButton("Next Move");
     button.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent event) {
-          //commentComponent.setText(move);
+          PGNMove move = boardController.nextMove();
+          commentComponent.setText(move.getFullMove());
+          if (move.getComment() != null) {
+            commentComponent.setText(move.getComment());
+          }
           commentComponent.repaint();
-          boardController.nextMove();
           boardComponent.repaint();
       }
     });

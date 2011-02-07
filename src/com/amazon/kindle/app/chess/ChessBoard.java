@@ -236,6 +236,8 @@ public class ChessBoard {
         move("h8", "f8");
         break;
       }
+    } else if (move.isEndGameMarked()) {
+      // Do nothing
     } else {
       // Just a regular move
       move(move.getFromSquare(), move.getToSquare());

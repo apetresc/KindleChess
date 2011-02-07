@@ -24,13 +24,15 @@ public class GlobalKeyDispatcher implements KeyEventDispatcher {
       if (main.getBoardController() != null) {
         event.consume();
         PGNMove move = main.getBoardController().nextMove();
-        main.getCommentArea().setText(
-                move.getComment() == null ? move.getFullMove() : move.getComment());
-        main.getProgressBar().incrementTick();
-        
-        main.getProgressBar().repaint();
-        main.getChessBoardComponent().repaint();
-        main.getCommentArea().repaint();
+        if (move != null) {
+          main.getCommentArea().setText(
+                  move.getComment() == null ? move.getFullMove() : move.getComment());
+          main.getProgressBar().incrementTick();
+          
+          main.getProgressBar().repaint();
+          main.getChessBoardComponent().repaint();
+          main.getCommentArea().repaint();
+        }
       }
       return true;
     }

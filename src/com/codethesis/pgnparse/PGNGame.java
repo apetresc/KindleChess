@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 /**
@@ -89,8 +90,8 @@ public class PGNGame {
     return (PGNMove) moves.get(index);
   }
 
-  public Iterator getMovesIterator() {
-    return moves.iterator();
+  public ListIterator getMovesIterator() {
+    return moves.listIterator();
   }
 
   public int getMovesCount() {

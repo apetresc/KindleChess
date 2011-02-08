@@ -2,7 +2,7 @@ package com.amazon.kindle.app.chess;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
+import java.util.ListIterator;
 
 import com.codethesis.pgnparse.MalformedMoveException;
 import com.codethesis.pgnparse.PGNGame;
@@ -14,7 +14,7 @@ public class BoardController {
 
 	private ChessBoard board;
 	private PGNGame    pgnGame;
-	private Iterator   pgnIterator;
+	private ListIterator   pgnIterator;
 	private int currentMoveNumber;
 	
 	public BoardController(ChessBoard board) {
@@ -39,6 +39,16 @@ public class BoardController {
 	  PGNMove move = (PGNMove) pgnIterator.next();
 	  board.move(move);
 	  currentMoveNumber++;
+	  return move;
+	}
+
+	public PGNMove previousMove() {
+	  if (pgnIterator == null || !pgnIterator.hasPrevious()) {
+	    return null;
+	  }
+	  PGNMove move = (PGNMove) pgnIterator.previous();
+	  board.undoMove(move);
+	  currentMoveNumber--;
 	  return move;
 	}
 

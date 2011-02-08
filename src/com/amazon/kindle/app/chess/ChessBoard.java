@@ -243,6 +243,71 @@ public class ChessBoard {
       move(move.getFromSquare(), move.getToSquare());
     }
   }
+
+  /**
+   * Undoes the specified move on the board.
+   *
+   * @param move The last PGNMove made on the board
+   */
+  public void undoMove(PGNMove move) {
+    if (move.isQueenSideCastle()) {
+      switch (move.getColor()) {
+      case Color.WHITE:
+        move("d1", "a1");
+        move("c1", "e1");
+        break;
+      case Color.BLACK:
+        move("d8", "a8");
+        move("c8", "e8");
+        break;
+      }
+    } else if (move.isKingSideCastle()) {
+      switch(move.getColor()) {
+      case Color.WHITE:
+        move("f1", "h1");
+        move("g1", "e1");
+        break;
+      case Color.BLACK:
+        move("f8", "h8");
+        move("g8", "e8");
+        break;
+      }
+    } else if (move.isEndGameMarked()) {
+      // Do nothing
+    } else {
+      // Just a regular move
+      int fromSquareColor = getPieceColor(move.getToSquare()) == WHITE ? BLACK : WHITE;
+      move(move.getToSquare(), move.getFromSquare());
+      if (move.isCaptured()) {
+        char capturedPieceChar = move.getCapturedPiece().charAt(0);
+        int capturedPiece;
+        switch (capturedPieceChar) {
+        case 'P':
+          capturedPiece = WHITE_PAWN;
+          break;
+        case 'N':
+          capturedPiece = WHITE_KNIGHT;
+          break;
+        case 'B':
+          capturedPiece = WHITE_BISHOP;
+          break;
+        case 'R':
+          capturedPiece = WHITE_ROOK;
+          break;
+        case 'Q':
+          capturedPiece = WHITE_QUEEN;
+          break;
+        default:
+          return;  
+        }
+        capturedPiece += fromSquareColor;
+        int[] toSquareCoords = convertAlgebraicToCoordinate(move.getToSquare());
+        board[toSquareCoords[0]][toSquareCoords[1]] = capturedPiece;
+      }
+    }
+    
+  }
+
   /**
    * Returns the color of the specified square. Note that ChessBoards
    * conventionally have a <code>WHITE</code> square in the bottom-right corner
@@ -290,7 +355,7 @@ public class ChessBoard {
   public int getPieceColor(String coordinate) {
     int[] square = convertAlgebraicToCoordinate(coordinate);
 
-    return getSquareColor(square[0], square[1]);
+    return (board[square[0]][square[1]] / 10) * 10;
   }
 
   /**

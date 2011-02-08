@@ -35,6 +35,19 @@ public class GlobalKeyDispatcher implements KeyEventDispatcher {
         }
       }
       return true;
+    case KindleKeyCodes.VK_FIVE_WAY_LEFT:
+      if (main.getBoardController() != null) {
+        event.consume();
+        PGNMove move = main.getBoardController().previousMove();
+        if (move != null) {
+          main.getCommentArea().setText("");
+          main.getProgressBar().decrementTick();
+          
+          main.getProgressBar().repaint();
+          main.getChessBoardComponent().repaint();
+          main.getCommentArea().repaint();
+        }
+      }
     }
     return false;
   }

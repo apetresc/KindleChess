@@ -43,6 +43,8 @@ public class PGNParser {
 
   public static String KING = "K";
 
+  public static String[] PIECES = new String[] { "", PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING };
+
   private static final byte WHITE = -1;
 
   private static final byte BLACK = 1;
@@ -539,6 +541,9 @@ public class PGNParser {
 
     move.setFromSquare(getChessCoords(fromhPos, fromvPos));
     move.setToSquare(getChessCoords(tohPos, tovPos));
+    if (move.isCaptured()) {
+      move.setCapturedPiece(PIECES[board[tohPos][tovPos] * -color]);
+    }
   }
 
   /**
@@ -585,6 +590,9 @@ public class PGNParser {
 
     move.setFromSquare(getChessCoords(fromhPos, fromvPos));
     move.setToSquare(getChessCoords(tohPos, tovPos));
+    if (move.isCaptured()) {
+      move.setCapturedPiece(PIECES[board[tohPos][tovPos] * -color]);
+    }
   }
 
   /**
@@ -627,6 +635,9 @@ public class PGNParser {
 
     move.setFromSquare(getChessCoords(fromhPos, fromvPos));
     move.setToSquare(getChessCoords(tohPos, tovPos));
+    if (move.isCaptured()) {
+      move.setCapturedPiece(PIECES[board[tohPos][tovPos] * -color]);
+    }
   }
 
   /**
@@ -665,6 +676,9 @@ public class PGNParser {
 
     move.setFromSquare(getChessCoords(fromhPos, fromvPos));
     move.setToSquare(getChessCoords(tohPos, tovPos));
+    if (move.isCaptured()) {
+      move.setCapturedPiece(PIECES[board[tohPos][tovPos] * -color]);
+    }
   }
 
   /**
@@ -711,6 +725,9 @@ public class PGNParser {
 
     move.setFromSquare(getChessCoords(fromhPos, fromvPos));
     move.setToSquare(getChessCoords(tohPos, tovPos));
+    if (move.isCaptured()) {
+      move.setCapturedPiece(PIECES[board[tohPos][tovPos] * -color]);
+    }
   }
 
   /**

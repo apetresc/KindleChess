@@ -33,6 +33,8 @@ public class PGNMove {
 
   private String piece;
 
+  private String capturedPiece;
+
   private int color;
 
   private String comment;
@@ -152,6 +154,21 @@ public class PGNMove {
    */
   void setPiece(String piece) {
     this.piece = piece;
+  }
+
+  /**
+   * @return the captured piece
+   */
+  public String getCapturedPiece() {
+    return capturedPiece;
+  }
+
+  /**
+   * @param piece
+   *          the piece being captured by this move
+   */
+  void setCapturedPiece(String piece) {
+    this.capturedPiece = piece;
   }
 
   /**

@@ -1,10 +1,6 @@
 package com.amazon.kindle.app.chess;
 
 import java.awt.Container;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.Dimension;
@@ -12,15 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import org.apache.log4j.Logger;
-import org.kwt.ui.KWTProgressBar;
-
 import com.amazon.kindle.app.chess.ui.GlobalKeyDispatcher;
-import com.amazon.kindle.app.chess.ui.KChessBoardComponent;
-import com.amazon.kindle.app.chess.ui.KCommentArea;
+import com.amazon.kindle.app.chess.ui.MainPanel;
 import com.amazon.kindle.kindlet.AbstractKindlet;
 import com.amazon.kindle.kindlet.KindletContext;
-import com.amazon.kindle.kindlet.ui.KLabel;
-import com.amazon.kindle.kindlet.ui.KPanel;
 import com.amazon.kindle.kindlet.ui.KMenu;
 import com.amazon.kindle.kindlet.ui.KMenuItem;
 
@@ -31,14 +22,8 @@ public class Main extends AbstractKindlet {
   private static final String PGN_DIR = "/pgn/";
 
   private Container root;
-
-  private KLabel titleLabel;
-  private KLabel descriptionLabel;
-  private KChessBoardComponent boardComponent;
-  private KCommentArea commentComponent;
-  private KWTProgressBar progressBar;
-
   private ChessBoard board;
+  private MainPanel mainPanel;
   private BoardController boardController;
   
   static Logger log = Logger.getLogger(Main.class);
@@ -51,48 +36,12 @@ public class Main extends AbstractKindlet {
    */
   public void create(final KindletContext context) {
     root = context.getRootContainer();
-    final KPanel mainPanel = new KPanel(new GridBagLayout());
 
     board = new ChessBoard();
     board.init();
 
-    GridBagConstraints gc = new GridBagConstraints();
+    mainPanel = new MainPanel(context, board);
 
-    titleLabel = new KLabel();
-    titleLabel.setFont(new Font(null, Font.BOLD, 25));
-    gc.gridx = 0;
-    gc.gridy = 0;
-    gc.weighty = 0.0;
-    gc.anchor = GridBagConstraints.NORTH;
-    mainPanel.add(titleLabel, gc);
-    
-    descriptionLabel = new KLabel();
-    descriptionLabel.setFont(new Font(null, Font.BOLD, 18));
-    gc.gridy = 1;
-    mainPanel.add(descriptionLabel, gc);
-    
-    boardComponent = new KChessBoardComponent(context, board, 75, true, false, false);
-    boardComponent.setFocusable(true);
-    gc.gridy = 2;
-    gc.insets = new Insets(0, 10, 0, 0);
-    mainPanel.add(boardComponent, gc);
-    
-    commentComponent = new KCommentArea(ChessBoard.SIZE * boardComponent.getSquareSize() + 4, 200);
-    commentComponent.setFocusable(false);
-    gc.gridy = 3;
-    gc.weighty = 1.0;
-    gc.fill = GridBagConstraints.BOTH;
-    gc.insets = new Insets(0, 10, 0, 10);
-    mainPanel.add(commentComponent, gc);
-
-    progressBar = new KWTProgressBar();
-    progressBar.setLabelStyle(KWTProgressBar.STYLE_NONE);
-    gc.gridy = 4;
-    gc.insets = new Insets(0, 10, 20, 10);
-    gc.fill = GridBagConstraints.HORIZONTAL;
-    gc.anchor = GridBagConstraints.SOUTH;
-    mainPanel.add(progressBar, gc);
-    
     // menu to allow board resizing for testing
     final KMenu menu = new KMenu();
     class BoardResizeMenuItem extends KMenuItem {
@@ -100,7 +49,7 @@ public class Main extends AbstractKindlet {
         super(percent + "%");
         addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
-            boardComponent.setSquareSize(percent);
+            mainPanel.getChessBoardComponent().setSquareSize(percent);
             root.invalidate();
           }
         });
@@ -116,12 +65,10 @@ public class Main extends AbstractKindlet {
     boardController = new BoardController(board);
     try {
       boardController.loadPGN(getClass().getResourceAsStream(PGN_DIR + "test.pgn"));
-      progressBar.setTotalTicks(boardController.getCurrentMainBranchLength());
+      mainPanel.getProgressBar().setTotalTicks(boardController.getCurrentMainBranchLength());
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     } catch (com.codethesis.pgnparse.PGNParseException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
@@ -131,20 +78,12 @@ public class Main extends AbstractKindlet {
     root.add(mainPanel);
   }
 
+  public MainPanel getMainPanel() {
+    return mainPanel;
+  }
+
   public BoardController getBoardController() {
     return boardController;
-  }
-
-  public KCommentArea getCommentArea() {
-    return commentComponent;
-  }
-
-  public KChessBoardComponent getChessBoardComponent() {
-    return boardComponent;
-  }
-  
-  public KWTProgressBar getProgressBar() {
-    return progressBar;
   }
 
   public boolean boardHasFocus() {

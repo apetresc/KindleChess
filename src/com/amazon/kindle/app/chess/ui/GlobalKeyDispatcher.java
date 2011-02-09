@@ -10,9 +10,11 @@ import com.codethesis.pgnparse.PGNMove;
 public class GlobalKeyDispatcher implements KeyEventDispatcher {
 
   private final Main main;
+  private final MainPanel mainPanel;
   
   public GlobalKeyDispatcher(Main main) {
     this.main = main;
+    mainPanel = main.getMainPanel();
   }
 
   public boolean dispatchKeyEvent(final KeyEvent event) {
@@ -25,13 +27,13 @@ public class GlobalKeyDispatcher implements KeyEventDispatcher {
         event.consume();
         PGNMove move = main.getBoardController().nextMove();
         if (move != null) {
-          main.getCommentArea().setText(
+          mainPanel.getCommentArea().setText(
                   move.getComment() == null ? move.getFullMove() : move.getComment());
-          main.getProgressBar().incrementTick();
+          mainPanel.getProgressBar().incrementTick();
           
-          main.getProgressBar().repaint();
-          main.getChessBoardComponent().repaint();
-          main.getCommentArea().repaint();
+          mainPanel.getProgressBar().repaint();
+          mainPanel.getChessBoardComponent().repaint();
+          mainPanel.getCommentArea().repaint();
         }
       }
       return true;
@@ -40,12 +42,12 @@ public class GlobalKeyDispatcher implements KeyEventDispatcher {
         event.consume();
         PGNMove move = main.getBoardController().previousMove();
         if (move != null) {
-          main.getCommentArea().setText("");
-          main.getProgressBar().decrementTick();
+          mainPanel.getCommentArea().setText("");
+          mainPanel.getProgressBar().decrementTick();
           
-          main.getProgressBar().repaint();
-          main.getChessBoardComponent().repaint();
-          main.getCommentArea().repaint();
+          mainPanel.getProgressBar().repaint();
+          mainPanel.getChessBoardComponent().repaint();
+          mainPanel.getCommentArea().repaint();
         }
       }
     }

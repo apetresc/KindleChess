@@ -1,7 +1,5 @@
 package com.amazon.kindle.app.chess;
 
-import org.apache.log4j.Logger;
-
 import com.codethesis.pgnparse.Color;
 import com.codethesis.pgnparse.PGNMove;
 
@@ -37,8 +35,6 @@ public class ChessBoard {
 
   /** The size of the chess board being represented. */
   public static final int SIZE = 8;
-
-  private final Logger log = Logger.getLogger(ChessBoard.class);
 
   /** Creates a new ChessBoard with the default size (8x8) */
   public ChessBoard() {
@@ -204,8 +200,6 @@ public class ChessBoard {
   public void move(int srcX, int srcY, int dstX, int dstY) {
     board[dstX][dstY] = board[srcX][srcY];
     board[srcX][srcY] = BLANK;
-
-    log.info("Moving (" + srcX + "," + srcY + ") to (" + dstX + "," + dstY + ")");
   }
 
   /**

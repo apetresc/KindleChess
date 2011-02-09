@@ -11,34 +11,33 @@ import com.codethesis.pgnparse.PGNMove;
  */
 public class ChessBoard {
 
-  private int[][] board;
-  private int colorToMove;
+  private byte[][] board;
 
-  public static final int BLANK = -1;
-  public static final int WHITE_PAWN = 1;
-  public static final int WHITE_ROOK = 2;
-  public static final int WHITE_KNIGHT = 3;
-  public static final int WHITE_BISHOP = 4;
-  public static final int WHITE_QUEEN = 5;
-  public static final int WHITE_KING = 6;
-  public static final int BLACK_PAWN = 11;
-  public static final int BLACK_ROOK = 12;
-  public static final int BLACK_KNIGHT = 13;
-  public static final int BLACK_BISHOP = 14;
-  public static final int BLACK_QUEEN = 15;
-  public static final int BLACK_KING = 16;
+  public static final byte BLANK = -1;
+  public static final byte WHITE_PAWN = 1;
+  public static final byte WHITE_ROOK = 2;
+  public static final byte WHITE_KNIGHT = 3;
+  public static final byte WHITE_BISHOP = 4;
+  public static final byte WHITE_QUEEN = 5;
+  public static final byte WHITE_KING = 6;
+  public static final byte BLACK_PAWN = 11;
+  public static final byte BLACK_ROOK = 12;
+  public static final byte BLACK_KNIGHT = 13;
+  public static final byte BLACK_BISHOP = 14;
+  public static final byte BLACK_QUEEN = 15;
+  public static final byte BLACK_KING = 16;
 
-  public static final int WHITE = 0;
-  public static final int BLACK = 10;
+  public static final byte WHITE = 0;
+  public static final byte BLACK = 10;
 
-  public static final int OFF_BOARD = -2;
+  public static final byte OFF_BOARD = -2;
 
   /** The size of the chess board being represented. */
   public static final int SIZE = 8;
 
   /** Creates a new ChessBoard with the default size (8x8) */
   public ChessBoard() {
-    board = new int[SIZE][SIZE];
+    board = new byte[SIZE][SIZE];
   }
 
   /**
@@ -66,23 +65,6 @@ public class ChessBoard {
     board[2][7] = board[5][7] = BLACK_BISHOP;
     board[3][7] = BLACK_QUEEN;
     board[4][7] = BLACK_KING;
-
-    colorToMove = WHITE;
-  }
-
-  public int getColorToMove() {
-    return colorToMove;
-  }
-
-  public void toggleColorToMove() {
-    switch (colorToMove) {
-    case WHITE:
-      colorToMove = BLACK;
-      break;
-    case BLACK:
-      colorToMove = WHITE;
-      break;
-    }
   }
 
   /**
@@ -131,7 +113,7 @@ public class ChessBoard {
    * @return <code>BLANK</code> if no piece occupies this square, or the piece
    *         code of the occupying piece (for example, <code>WHITE_PAWN</code>).
    */
-  public int getSquare(String coordinate) {
+  public byte getSquare(String coordinate) {
     int[] square = convertAlgebraicToCoordinate(coordinate);
 
     return getSquare(square[0], square[1]);
@@ -148,7 +130,7 @@ public class ChessBoard {
    * @return <code>BLANK</code> if no piece occupies this square, or the piece
    *         code of the occupying piece (for example, <code>WHITE_PAWN</code>).
    */
-  public int getSquare(int srcX, int srcY) {
+  public byte getSquare(int srcX, int srcY) {
     try {
       return board[srcX][srcY];
     } catch (ArrayIndexOutOfBoundsException aioobe) {
@@ -274,7 +256,7 @@ public class ChessBoard {
       move(move.getToSquare(), move.getFromSquare());
       if (move.isCaptured()) {
         char capturedPieceChar = move.getCapturedPiece().charAt(0);
-        int capturedPiece;
+        byte capturedPiece;
         switch (capturedPieceChar) {
         case 'P':
           capturedPiece = WHITE_PAWN;
@@ -330,7 +312,7 @@ public class ChessBoard {
    * @return <code>WHITE</code> if the specified square is colored white,
    *         <code>BLACK</code> if the specified square is colored black.
    */
-  public int getSquareColor(int srcX, int srcY) {
+  public byte getSquareColor(int srcX, int srcY) {
     if (srcX < 0 || srcY < 0 || srcX >= SIZE || srcY >= SIZE) {
       return OFF_BOARD;
     }
@@ -346,10 +328,10 @@ public class ChessBoard {
    *         white piece, <code>BLACK</code> if the specified square is being
    *         occupied by a black piece.
    */
-  public int getPieceColor(String coordinate) {
+  public byte getPieceColor(String coordinate) {
     int[] square = convertAlgebraicToCoordinate(coordinate);
 
-    return (board[square[0]][square[1]] / 10) * 10;
+    return (byte) ((board[square[0]][square[1]] / 10) * 10);
   }
 
   /**
@@ -363,27 +345,11 @@ public class ChessBoard {
    *         white piece, <code>BLACK</code> if the specified square is being
    *         occupied by a black piece.
    */
-  public int getPieceColor(int srcX, int srcY) {
+  public byte getPieceColor(int srcX, int srcY) {
     if (srcX < 0 || srcY < 0 || srcX >= SIZE || srcY >= SIZE) {
       return OFF_BOARD;
     }
 
-    return getSquare(srcX, srcY) / 10;
-  }
-
-  /**
-   * Returns a textual representation of this ChessBoard.
-   * 
-   * @return A textual representation of this ChessBoard.
-   */
-  public String toString() {
-    String boardStr = "";
-    for (int y = SIZE - 1; y >= 0; y--) {
-      for (int x = 0; x < SIZE; x++) {
-        boardStr += "|" + board[x][y] + "|";
-      }
-      boardStr += "\n";
-    }
-    return boardStr;
+    return (byte) (getSquare(srcX, srcY) / 10);
   }
 }

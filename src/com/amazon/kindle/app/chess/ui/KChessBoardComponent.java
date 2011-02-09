@@ -124,7 +124,7 @@ public class KChessBoardComponent extends KComponent {
   public void paint(Graphics g) {
     for (int y = 0; y < ChessBoard.SIZE; y++) {
       for (int x = 0; x < ChessBoard.SIZE; x++) {
-        int square = board.getSquare(x, y);
+        byte square = board.getSquare(x, y);
         Color foregroundColor = null, backgroundColor = null;
         switch (board.getSquareColor(x, y)) {
         case ChessBoard.BLACK:

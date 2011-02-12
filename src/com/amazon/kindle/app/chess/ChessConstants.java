@@ -25,6 +25,7 @@ public class ChessConstants {
     pieceTextIconMap.put(new Integer(ChessBoard.BLACK_QUEEN), "\u265B");
     pieceTextIconMap.put(new Integer(ChessBoard.BLACK_KING), "\u265A");
 
+    pieceTextMap.put("P", new Integer(ChessBoard.WHITE_PAWN));
     pieceTextMap.put("R", new Integer(ChessBoard.WHITE_ROOK));
     pieceTextMap.put("N", new Integer(ChessBoard.WHITE_KNIGHT));
     pieceTextMap.put("B", new Integer(ChessBoard.WHITE_BISHOP));

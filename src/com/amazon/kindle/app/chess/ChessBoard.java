@@ -255,27 +255,8 @@ public class ChessBoard {
       int fromSquareColor = getPieceColor(move.getToSquare()) == WHITE ? BLACK : WHITE;
       move(move.getToSquare(), move.getFromSquare());
       if (move.isCaptured()) {
-        char capturedPieceChar = move.getCapturedPiece().charAt(0);
-        byte capturedPiece;
-        switch (capturedPieceChar) {
-        case 'P':
-          capturedPiece = WHITE_PAWN;
-          break;
-        case 'N':
-          capturedPiece = WHITE_KNIGHT;
-          break;
-        case 'B':
-          capturedPiece = WHITE_BISHOP;
-          break;
-        case 'R':
-          capturedPiece = WHITE_ROOK;
-          break;
-        case 'Q':
-          capturedPiece = WHITE_QUEEN;
-          break;
-        default:
-          return;  
-        }
+        byte capturedPiece =
+            ((Integer) ChessConstants.pieceTextMap.get(move.getCapturedPiece())).byteValue();
         capturedPiece += fromSquareColor;
         int[] toSquareCoords = convertAlgebraicToCoordinate(move.getToSquare());
         board[toSquareCoords[0]][toSquareCoords[1]] = capturedPiece;

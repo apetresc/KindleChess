@@ -4,16 +4,13 @@ import java.awt.Container;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import org.apache.log4j.Logger;
 import com.amazon.kindle.app.chess.ui.GlobalKeyDispatcher;
 import com.amazon.kindle.app.chess.ui.MainPanel;
+import com.amazon.kindle.app.chess.ui.Menu;
 import com.amazon.kindle.kindlet.AbstractKindlet;
 import com.amazon.kindle.kindlet.KindletContext;
-import com.amazon.kindle.kindlet.ui.KMenu;
-import com.amazon.kindle.kindlet.ui.KMenuItem;
 
 public class Main extends AbstractKindlet {
 
@@ -41,26 +38,7 @@ public class Main extends AbstractKindlet {
     board.init();
 
     mainPanel = new MainPanel(context, board);
-
-    // menu to allow board resizing for testing
-    final KMenu menu = new KMenu();
-    class BoardResizeMenuItem extends KMenuItem {
-      public BoardResizeMenuItem(final int percent) {
-        super(percent + "%");
-        addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            mainPanel.getChessBoardComponent().setSquareSize(percent);
-            root.invalidate();
-          }
-        });
-      }
-    }
-
-    menu.add(new BoardResizeMenuItem(100));
-    menu.add(new BoardResizeMenuItem(75));
-    menu.add(new BoardResizeMenuItem(50));
-    menu.add(new BoardResizeMenuItem(25));
-    context.setMenu(menu);
+    context.setMenu(new Menu(this));
 
     boardController = new BoardController(board);
     try {

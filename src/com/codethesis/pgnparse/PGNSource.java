@@ -77,4 +77,17 @@ public class PGNSource {
     return PGNParser.parse(source, force);
   }
 
+  public List listGameStubs() throws PGNParseException, IOException {
+    return PGNParser.parseStubs(source);
+  }
+
+  public List listGameStubs(boolean force) throws PGNParseException, IOException {
+    return PGNParser.parseStubs(source, force);
+  }
+
+  public PGNGame getGameFromStub(PGNGameStub stub)
+      throws PGNParseException, IOException, MalformedMoveException {
+
+    return PGNParser.parseSingleGame(source, stub.getOffset());
+  }
 }

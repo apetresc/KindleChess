@@ -6,7 +6,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
@@ -35,9 +34,8 @@ public class PgnSelectionPanel extends KPanel {
     }
     public void actionPerformed(ActionEvent event) {
       try {
-        log.info("Action performed on " + pgnFile.getName());
-        main.loadPgn(new FileInputStream(pgnFile));
-        main.setActivePanel(Main.MAIN_PANEL);
+        GameSelectionPanel gameSelectionPanel = new GameSelectionPanel(main, pgnFile);
+        main.setActivePanel(gameSelectionPanel);
       } catch (IOException e) {
         log.error(e);
       } catch (PGNParseException e) {
@@ -53,7 +51,7 @@ public class PgnSelectionPanel extends KPanel {
     pgnListPages = new KPages(PageProviders.createKBoxLayoutProvider(KBoxLayout.Y_AXIS));
     pgnListPages.setFocusable(true);
     pgnListPages.setEnabled(true);
-    pgnListPages.setPageKeyPolicy(KPages.PAGE_KEYS_GLOBAL);
+    pgnListPages.setPageKeyPolicy(KPages.PAGE_KEYS_LOCAL);
 
     for (int i = 0; i < pgnList.length; i++) {
       final KWTSelectableLabel pgnLabel = new KWTSelectableLabel(pgnList[i]);
@@ -62,9 +60,7 @@ public class PgnSelectionPanel extends KPanel {
       pgnLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
       pgnLabel.addActionListener(new PgnLabelActionListener(pgnFiles[i]));
       pgnListPages.addItem(pgnLabel);
-      log.info("Added " + pgnLabel.getText() + " to pgnListPages");
     }
-    pgnListPages.getComponent(0).requestFocus();
 
     GridBagConstraints gc = new GridBagConstraints();
     gc.gridx = 0;
@@ -81,8 +77,10 @@ public class PgnSelectionPanel extends KPanel {
     gc.weighty = 1.0;
     gc.fill = GridBagConstraints.BOTH;
     add(pgnListPages, gc);
-    log.info("Added pgnListPages to panel");
     pgnListPages.first();
-    //pgnListPages.requestFocus();
+  }
+
+  public void requestFocus() {
+    pgnListPages.getComponent(0).requestFocus();
   }
 }

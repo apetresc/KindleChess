@@ -14,7 +14,10 @@ import com.amazon.kindle.app.chess.ui.Menu;
 import com.amazon.kindle.app.chess.ui.PgnSelectionPanel;
 import com.amazon.kindle.kindlet.AbstractKindlet;
 import com.amazon.kindle.kindlet.KindletContext;
+import com.amazon.kindle.kindlet.ui.KPanel;
+import com.codethesis.pgnparse.PGNGameStub;
 import com.codethesis.pgnparse.PGNParseException;
+import com.codethesis.pgnparse.PGNSource;
 
 public class Main extends AbstractKindlet {
 
@@ -73,6 +76,13 @@ public class Main extends AbstractKindlet {
     mainPanel.getProgressBar().setTotalTicks(boardController.getCurrentMainBranchLength());
   }
 
+  public void loadPgn(PGNSource pgnSource, PGNGameStub stub) throws IOException, PGNParseException {
+    board.init();
+    boardController.loadPGN(pgnSource, stub);
+    mainPanel.getProgressBar().setCurrentTick(0);
+    mainPanel.getProgressBar().setTotalTicks(boardController.getCurrentMainBranchLength());
+  }
+
   public void setActivePanel(int panel) {
     switch (panel) {
     case MAIN_PANEL:
@@ -88,9 +98,18 @@ public class Main extends AbstractKindlet {
         }
         context.getRootContainer().remove(0);
         context.getRootContainer().add(pgnSelectionPanel);
+        pgnSelectionPanel.requestFocus();
       }
       break;
     }
+    context.getRootContainer().invalidate();
+    context.getRootContainer().repaint();
+  }
+
+  public void setActivePanel(KPanel panel) {
+    context.getRootContainer().remove(0);
+    context.getRootContainer().add(panel);
+    panel.requestFocus();
     context.getRootContainer().invalidate();
     context.getRootContainer().repaint();
   }

@@ -123,20 +123,7 @@ public class PGNParser {
    */
   public static List parse(String pgn) throws PGNParseException, IOException, NullPointerException,
           MalformedMoveException {
-    List games = new LinkedList();
-    List pgnSources = PGNParser.splitPGN(pgn);
-
-    if (pgnSources == null || pgnSources.size() == 0) {
-      throw new PGNParseException();
-    }
-
-    Iterator i = pgnSources.iterator();
-
-    while (i.hasNext()) {
-      games.add(parsePGNGame((String) i.next()));
-    }
-
-    return games;
+    return parse(pgn, false);
   }
 
   public static List parse(String pgn, boolean force) throws PGNParseException, IOException,
@@ -164,6 +151,48 @@ public class PGNParser {
     }
 
     return games;
+  }
+
+  public static PGNGame parseSingleGame(String pgn, int offset)
+      throws PGNParseException, IOException, MalformedMoveException {
+
+    return parsePGNGame(PGNParser.splitFirstPGN(pgn, offset));
+  }
+
+  public static List parseStubs(String pgn) throws PGNParseException, IOException {
+    return parseStubs(pgn, false);
+  }
+
+  public static List parseStubs(String pgn, boolean force) throws PGNParseException, IOException,
+      NullPointerException {
+
+    List gameStubs = new LinkedList();
+    List pgnSources = PGNParser.splitPGNStubs(pgn);
+
+    if (pgnSources == null || pgnSources.size() == 0) {
+      throw new PGNParseException();
+    }
+
+    Iterator i = pgnSources.iterator();
+
+    while (i.hasNext()) {
+      Object[] pgnStubEntry = (Object[]) i.next();
+      if (force) {
+        try {
+          PGNGameStub gameStub = parsePGNGameStub(
+              (String) pgnStubEntry[0], ((Integer) pgnStubEntry[1]).intValue());
+          gameStubs.add(gameStub);
+        } catch (PGNParseException e) {
+          e.printStackTrace();
+        }
+      } else {
+        PGNGameStub gameStub = parsePGNGameStub(
+            (String) pgnStubEntry[0], ((Integer) pgnStubEntry[1]).intValue());
+        gameStubs.add(gameStub);
+      }
+    }
+
+    return gameStubs;
   }
 
   /**
@@ -263,6 +292,26 @@ public class PGNParser {
     return game;
   }
 
+  private static PGNGameStub parsePGNGameStub(String pgn, int offset)
+      throws IOException, PGNParseException {
+
+    PGNGameStub gameStub = new PGNGameStub(offset);
+    BufferedReader br = new BufferedReader(new StringReader(pgn));
+    String line;
+
+    while ((line = br.readLine()) != null) {
+      try {
+        String tagName = line.substring(1, line.indexOf(" "));
+        String tagValue = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+        gameStub.addTag(tagName, tagValue);
+      } catch (IndexOutOfBoundsException e) {
+        // Do nothing
+      }
+    }
+
+    return gameStub;
+  }
+
   /**
    * 
    * @param rawMoves
@@ -319,7 +368,7 @@ public class PGNParser {
         buffer.append(line + "\r\n");
 
         if (line.endsWith("1-0") || line.endsWith("0-1") || line.endsWith("1/2-1/2")
-                || line.endsWith("*")) {
+            || line.endsWith("*")) {
           pgnGames.add(buffer.toString());
           buffer.delete(0, buffer.length());
         }
@@ -332,6 +381,58 @@ public class PGNParser {
     return pgnGames;
   }
 
+  private static String splitFirstPGN(String pgn, int offset) throws IOException {
+    BufferedReader br = new BufferedReader(new StringReader(pgn));
+    br.skip(offset);
+    String line;
+    StringBuffer buffer = new StringBuffer();
+
+    while ((line = br.readLine()) != null) {
+      line = line.trim();
+
+      if (!PGNParseUtils.isEmpty(line)) {
+        buffer.append(line + "\r\n");
+
+        if (line.endsWith("1-0") || line.endsWith("0-1") || line.endsWith("1/2-1/2")
+            || line.endsWith("*")) {
+          br.close();
+          return buffer.toString();
+        }
+      }
+    }
+    br.close();
+    throw new IllegalStateException("Game should have ended: " + buffer.toString());
+  }
+
+  private static List splitPGNStubs(String pgn) throws IOException {
+    List pgnGameStubs = new LinkedList();
+    BufferedReader br = new BufferedReader(new StringReader(pgn));
+    String line;
+    StringBuffer buffer = new StringBuffer();
+    int offset = 0;
+    int c = 0;
+
+    while ((line = br.readLine()) != null) {
+      c += line.length() + 2;
+      line = line.trim();
+
+      if (!PGNParseUtils.isEmpty(line)) {
+        if (line.startsWith("[") && line.endsWith("]")) {
+          buffer.append(line + "\r\n");
+        }
+
+        if (line.endsWith("1-0") || line.endsWith("0-1") || line.endsWith("1/2-1/2")
+            || line.endsWith("*")) {
+          pgnGameStubs.add(new Object[] { buffer.toString(), new Integer(offset) });
+          offset = c;
+          buffer.delete(0, buffer.length());
+        }
+      }
+    }
+    br.close();
+
+    return pgnGameStubs;
+  }
   /**
    * 
    * @param move

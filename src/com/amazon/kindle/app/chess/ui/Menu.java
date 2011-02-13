@@ -22,12 +22,21 @@ public class Menu extends KMenu {
       });
     }
   }
-  public Menu(Main main) {
+
+  public Menu(final Main main) {
     this.main = main;
     
     add(new BoardResizeMenuItem(100));
     add(new BoardResizeMenuItem(75));
     add(new BoardResizeMenuItem(50));
     add(new BoardResizeMenuItem(25));
+
+    KMenuItem choosePgnMenuItem = new KMenuItem("Choose PGN...");
+    choosePgnMenuItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        main.setActivePanel(Main.PGN_SELECTION_PANEL);
+      }
+    });
+    add(choosePgnMenuItem);
   }
 }

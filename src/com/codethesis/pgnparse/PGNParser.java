@@ -197,7 +197,7 @@ public class PGNParser {
 
         }
       } else {
-        if (!PGNParseUtils.isEmpty(line)) {
+        if (!PGNParseUtils.isEmpty(line) && game.getTagsCount() > 0) {
           buffer.append(line + " ");
         }
       }

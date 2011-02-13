@@ -3,6 +3,8 @@ package com.amazon.kindle.app.chess.ui;
 import java.awt.KeyEventDispatcher;
 import java.awt.event.KeyEvent;
 
+import org.apache.log4j.Logger;
+
 import com.amazon.kindle.app.chess.Main;
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
 import com.codethesis.pgnparse.PGNMove;
@@ -11,7 +13,9 @@ public class GlobalKeyDispatcher implements KeyEventDispatcher {
 
   private final Main main;
   private final MainPanel mainPanel;
-  
+
+  private static final Logger log = Logger.getLogger(GlobalKeyDispatcher.class);
+
   public GlobalKeyDispatcher(Main main) {
     this.main = main;
     mainPanel = main.getMainPanel();
@@ -20,7 +24,7 @@ public class GlobalKeyDispatcher implements KeyEventDispatcher {
   public boolean dispatchKeyEvent(final KeyEvent event) {
     if (event.isConsumed() || event.getID() == KeyEvent.KEY_RELEASED) return false;
     if (!main.boardHasFocus()) return false;
-    
+
     switch (event.getKeyCode()) {
     case KindleKeyCodes.VK_FIVE_WAY_RIGHT:
       if (main.getBoardController() != null) {

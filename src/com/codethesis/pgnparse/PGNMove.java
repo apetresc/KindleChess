@@ -67,7 +67,7 @@ public class PGNMove {
    * @param fullMove
    */
   PGNMove(String fullMove) throws MalformedMoveException {
-    this(fullMove, "");
+    this(fullMove, null);
   }
 
   /**

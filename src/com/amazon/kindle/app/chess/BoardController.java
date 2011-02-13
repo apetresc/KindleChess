@@ -52,6 +52,24 @@ public class BoardController {
 	  return move;
 	}
 
+	public PGNMove peekNextMove() {
+	  if (pgnIterator == null || !pgnIterator.hasNext()) {
+	    return null;
+	  }
+	  PGNMove move = (PGNMove) pgnIterator.next();
+	  pgnIterator.previous();
+	  return move;
+	}
+
+	public PGNMove peekPreviousMove() {
+	  if (pgnIterator == null || !pgnIterator.hasPrevious()) {
+	    return null;
+	  }
+	  PGNMove move = (PGNMove) pgnIterator.previous();
+	  pgnIterator.next();
+	  return move;
+	}
+
 	public int getCurrentMoveNumber() {
 	  return currentMoveNumber;
 	}

@@ -28,9 +28,9 @@ public class GlobalKeyDispatcher implements KeyEventDispatcher {
         PGNMove move = main.getBoardController().nextMove();
         if (move != null) {
           mainPanel.getCommentArea().setText(
-                  move.getComment() == null ? move.getFullMove() : move.getComment());
+              move.getComment() == null ? move.getFullMove() : move.getComment());
           mainPanel.getProgressBar().incrementTick();
-          
+
           mainPanel.getProgressBar().repaint();
           mainPanel.getChessBoardComponent().repaint();
           mainPanel.getCommentArea().repaint();
@@ -42,9 +42,15 @@ public class GlobalKeyDispatcher implements KeyEventDispatcher {
         event.consume();
         PGNMove move = main.getBoardController().previousMove();
         if (move != null) {
-          mainPanel.getCommentArea().setText("");
+          PGNMove previousMove = main.getBoardController().peekPreviousMove();
+          if (previousMove != null) {
+            mainPanel.getCommentArea().setText(previousMove.getComment() == null ?
+                previousMove.getFullMove() : previousMove.getComment());
+          } else {
+            mainPanel.getCommentArea().setText("");
+          }
           mainPanel.getProgressBar().decrementTick();
-          
+
           mainPanel.getProgressBar().repaint();
           mainPanel.getChessBoardComponent().repaint();
           mainPanel.getCommentArea().repaint();

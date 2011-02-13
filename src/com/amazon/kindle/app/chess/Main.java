@@ -5,12 +5,15 @@ import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.Dimension;
 import java.io.IOException;
+import java.io.InputStream;
+
 import org.apache.log4j.Logger;
 import com.amazon.kindle.app.chess.ui.GlobalKeyDispatcher;
 import com.amazon.kindle.app.chess.ui.MainPanel;
 import com.amazon.kindle.app.chess.ui.Menu;
 import com.amazon.kindle.kindlet.AbstractKindlet;
 import com.amazon.kindle.kindlet.KindletContext;
+import com.codethesis.pgnparse.PGNParseException;
 
 public class Main extends AbstractKindlet {
 
@@ -23,7 +26,7 @@ public class Main extends AbstractKindlet {
   private MainPanel mainPanel;
   private BoardController boardController;
   
-  static Logger log = Logger.getLogger(Main.class);
+  private static final Logger log = Logger.getLogger(Main.class);
 
   /**
    * Initializes the ChessBoard and the UI, and draws them to the screen.
@@ -35,19 +38,18 @@ public class Main extends AbstractKindlet {
     root = context.getRootContainer();
 
     board = new ChessBoard();
-    board.init();
 
     mainPanel = new MainPanel(context, board);
     context.setMenu(new Menu(this));
 
     boardController = new BoardController(board);
     try {
-      boardController.loadPGN(getClass().getResourceAsStream(PGN_DIR + "test.pgn"));
-      mainPanel.getProgressBar().setTotalTicks(boardController.getCurrentMainBranchLength());
+      loadPgn(getClass().getResourceAsStream(PGN_DIR + "test.pgn"));
     } catch (IOException e) {
+      log.error(e);
       e.printStackTrace();
-    } catch (com.codethesis.pgnparse.PGNParseException e) {
-      e.printStackTrace();
+    } catch (PGNParseException e) {
+      log.error(e);
     }
 
     KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(
@@ -56,6 +58,11 @@ public class Main extends AbstractKindlet {
     root.add(mainPanel);
   }
 
+  public void loadPgn(InputStream pgn) throws IOException, PGNParseException {
+    board.init();
+    boardController.loadPGN(pgn);
+    mainPanel.getProgressBar().setTotalTicks(boardController.getCurrentMainBranchLength());
+  }
   public MainPanel getMainPanel() {
     return mainPanel;
   }

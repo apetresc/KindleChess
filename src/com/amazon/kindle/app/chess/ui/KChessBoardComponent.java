@@ -70,7 +70,7 @@ public class KChessBoardComponent extends KComponent {
 
     setSquareSize(percent);
     lightSquareColor = context.getUIResources().getBackgroundColor(KColorName.WHITE);
-    darkSquareColor = context.getUIResources().getBackgroundColor(KColorName.GRAY_09);
+    darkSquareColor = context.getUIResources().getBackgroundColor(KColorName.LIGHT_GRAY);
   }
 
   /**

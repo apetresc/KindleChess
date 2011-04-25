@@ -15,6 +15,7 @@ import com.amazon.kindle.app.chess.ui.PgnSelectionPanel;
 import com.amazon.kindle.kindlet.AbstractKindlet;
 import com.amazon.kindle.kindlet.KindletContext;
 import com.amazon.kindle.kindlet.ui.KPanel;
+import com.codethesis.pgnparse.PGNGame;
 import com.codethesis.pgnparse.PGNGameStub;
 import com.codethesis.pgnparse.PGNParseException;
 import com.codethesis.pgnparse.PGNSource;
@@ -71,14 +72,18 @@ public class Main extends AbstractKindlet {
 
   public void loadPgn(InputStream pgn) throws IOException, PGNParseException {
     board.init();
-    boardController.loadPGN(pgn);
+    PGNGame game = boardController.loadPGN(pgn);
+    mainPanel.getMoveList().setGame(game);
+    mainPanel.getCommentArea().setText(game.getMove(0).getComment());
     mainPanel.getProgressBar().setCurrentTick(0);
     mainPanel.getProgressBar().setTotalTicks(boardController.getCurrentMainBranchLength());
   }
 
   public void loadPgn(PGNSource pgnSource, PGNGameStub stub) throws IOException, PGNParseException {
     board.init();
-    boardController.loadPGN(pgnSource, stub);
+    PGNGame game = boardController.loadPGN(pgnSource, stub);
+    mainPanel.getMoveList().setGame(game);
+    mainPanel.getCommentArea().setText(game.getMove(0).getComment());
     mainPanel.getProgressBar().setCurrentTick(0);
     mainPanel.getProgressBar().setTotalTicks(boardController.getCurrentMainBranchLength());
   }

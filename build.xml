@@ -192,12 +192,12 @@ Download the 'Personal Basis Profile Reference Implementation'.  Be sure to sele
     <echo message="This Kindle Active Content has been built to run on the device." />
   </target>
 	
-  <target name="run-simulator" description="Run the unsigned content in the Kindle Simulator">
+  <target name="run-simulator" depends="build-unsigned-active-content" description="Run the unsigned content in the Kindle Simulator">
     <java jar="${simulator}"
           fork="true"
           spawn="true"
           dir="${dir.build}">
-      <arg line="-f ${file.output} --device KindleDX" />
+      <arg line="-f ${file.output} --device KindleLatestGen" />
     </java>
   </target>
   

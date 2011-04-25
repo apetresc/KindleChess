@@ -18,6 +18,7 @@ public class MainPanel extends KPanel {
   private final KLabel titleLabel;
   private final KLabel descriptionLabel;
   private final KChessBoardComponent boardComponent;
+  private final KChessMoveList moveList;
   private final KCommentArea commentComponent;
   private final KWTProgressBar progressBar;
 
@@ -43,25 +44,33 @@ public class MainPanel extends KPanel {
     gc.gridy = 2;
     gc.insets = new Insets(0, 10, 0, 0);
     add(boardComponent, gc);
-    
-    commentComponent = new KCommentArea(ChessBoard.SIZE * boardComponent.getSquareSize() + 4, 200);
-    commentComponent.setFocusable(false);
+
+    moveList = new KChessMoveList();
+    moveList.setFocusable(false);
     gc.gridy = 3;
     gc.weighty = 1.0;
     gc.fill = GridBagConstraints.BOTH;
-    gc.insets = new Insets(0, 10, 0, 10);
+    gc.insets = new Insets(0, 50, 0, 50);
+    add(moveList, gc);
+
+    commentComponent = new KCommentArea(ChessBoard.SIZE * boardComponent.getSquareSize() + 4, 200);
+    commentComponent.setFocusable(false);
+    gc.gridy = 4;
     add(commentComponent, gc);
 
     progressBar = new KWTProgressBar();
     progressBar.setLabelStyle(KWTProgressBar.STYLE_NONE);
-    gc.gridy = 4;
+    gc.gridy = 5;
     gc.insets = new Insets(0, 10, 20, 10);
     gc.fill = GridBagConstraints.HORIZONTAL;
     gc.anchor = GridBagConstraints.SOUTH;
     add(progressBar, gc);    
   }
 
-
+  public KChessMoveList getMoveList() {
+    return moveList;
+  }
+  
   public KCommentArea getCommentArea() {
     return commentComponent;
   }

@@ -3,8 +3,6 @@ package com.amazon.kindle.app.chess.ui;
 import java.awt.KeyEventDispatcher;
 import java.awt.event.KeyEvent;
 
-import org.apache.log4j.Logger;
-
 import com.amazon.kindle.app.chess.Main;
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
 import com.codethesis.pgnparse.PGNMove;
@@ -13,8 +11,6 @@ public class GlobalKeyDispatcher implements KeyEventDispatcher {
 
   private final Main main;
   private final MainPanel mainPanel;
-
-  private static final Logger log = Logger.getLogger(GlobalKeyDispatcher.class);
 
   public GlobalKeyDispatcher(Main main) {
     this.main = main;

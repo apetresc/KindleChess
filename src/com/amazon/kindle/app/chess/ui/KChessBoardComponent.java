@@ -114,8 +114,9 @@ public class KChessBoardComponent extends KComponent {
 
   public void setSquareSize(int percent) {
     int oldSquareSize = squareSize;
-    squareSize = (Main.SCREEN_SIZE.width < Main.SCREEN_SIZE.height ?
-        Main.SCREEN_SIZE.width : Main.SCREEN_SIZE.height) * percent / 100 / ChessBoard.SIZE;
+    squareSize = Math.min(Main.SCREEN_SIZE.width, Main.SCREEN_SIZE.height)
+        * percent / 100 / ChessBoard.SIZE;
+    Logger.getLogger(this.getClass()).info("Screen size is: " + Main.SCREEN_SIZE);
     if (oldSquareSize != squareSize) {
       initResources();
     }

@@ -22,7 +22,7 @@ public class BoardController {
     this.board = board;
   }
 
-  public void loadPGN(InputStream in) throws IOException, PGNParseException {
+  public PGNGame loadPGN(InputStream in) throws IOException, PGNParseException {
     PGNSource source = new PGNSource(in);
     try {
       pgnGame = (PGNGame) source.listGames().get(0);
@@ -31,9 +31,12 @@ public class BoardController {
     } catch (MalformedMoveException e) {
       throw new PGNParseException(e);
     }
+    return pgnGame;
   }
 
-  public void loadPGN(PGNSource pgnSource, PGNGameStub stub) throws IOException, PGNParseException {
+  public PGNGame loadPGN(PGNSource pgnSource, PGNGameStub stub) 
+      throws IOException, PGNParseException {
+
     try {
       pgnGame = pgnSource.getGameFromStub(stub);
       pgnIterator = pgnGame.getMovesIterator();
@@ -41,6 +44,7 @@ public class BoardController {
     } catch (MalformedMoveException e) {
       throw new PGNParseException(e);
     }
+    return pgnGame;
   }
 
   public PGNMove nextMove() {
